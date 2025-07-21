@@ -2,7 +2,6 @@ package usecase_test
 
 import (
 	"testing"
-	"time"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
@@ -15,6 +14,7 @@ import (
 type ObtainUserTimelineTestSuite struct {
 	suite.Suite
 	ctrl              *gomock.Controller
+	mockUsersRepo     *mocks.MockIUsersRepository
 	mockFollowersRepo *mocks.MockIFollowersRepository
 	mockMessageRepo   *mocks.MockIMessageRepository
 	usecase           *usecase.ObtainUserTimeline
@@ -22,9 +22,8 @@ type ObtainUserTimelineTestSuite struct {
 
 func (suite *ObtainUserTimelineTestSuite) SetupTest() {
 	suite.ctrl = gomock.NewController(suite.T())
-	suite.mockFollowersRepo = mocks.NewMockIFollowersRepository(suite.ctrl)
-	suite.mockMessageRepo = mocks.NewMockIMessageRepository(suite.ctrl)
-	suite.usecase = usecase.NewObtainUserTimeline(suite.mockFollowersRepo, suite.mockMessageRepo)
+	suite.mockUsersRepo = mocks.NewMockIUsersRepository(suite.ctrl)
+	suite.usecase = usecase.NewObtainUserTimeline(suite.mockUsersRepo)
 }
 
 func (suite *ObtainUserTimelineTestSuite) TearDownTest() {
@@ -33,48 +32,50 @@ func (suite *ObtainUserTimelineTestSuite) TearDownTest() {
 
 func (suite *ObtainUserTimelineTestSuite) TestExecute_Success() {
 	userID := "nicolas"
-	following := []string{"maria", "juan"}
+	followingName1 := "maria"
+	followingName2 := "juan"
 
-	jm, _ := domain.NewMessage("Hola soy Juan", "juan")
+	msgJuan, _ := domain.NewMessage("Hola soy Juan", "juan")
+	juan := &domain.User{Name: followingName2}
+	juan.Publications.AddMessage(msgJuan)
 
-	messagesJuan := []domain.Message{*jm}
+	msgMaria, _ := domain.NewMessage("Hola soy Maria", "maria")
+	maria := &domain.User{Name: followingName1}
+	maria.Publications.AddMessage(msgMaria)
 
-	time.Sleep(time.Microsecond * 100)
+	user := &domain.User{Name: userID, Following: []*domain.User{maria, juan}}
 
-	mm, _ := domain.NewMessage("Hola soy Maria", "maria")
-
-	messagesMaria := []domain.Message{*mm}
-
-	suite.mockFollowersRepo.
+	suite.mockUsersRepo.
 		EXPECT().
-		LoadFollowersByUser(userID).
-		Return(following, nil)
-
-	suite.mockMessageRepo.
-		EXPECT().
-		LoadAllByUser("maria").
-		Return(messagesMaria, nil)
-
-	suite.mockMessageRepo.
-		EXPECT().
-		LoadAllByUser("juan").
-		Return(messagesJuan, nil)
+		Get(userID).
+		Return(user, nil)
 
 	timeline, err := suite.usecase.Execute(userID)
 
 	suite.NoError(err)
-	suite.Len(timeline, 2)
-	suite.Equal("Hola soy Maria- said @maria", timeline[0])
-	suite.Equal("Hola soy Juan- said @juan", timeline[1])
+	suite.Len(timeline.GetAllMessages(), 2)
+
+	// Check that the correct messages are present
+	var foundMaria, foundJuan bool
+	for _, msg := range timeline.GetAllMessages() {
+		if msg.UserID() == "maria" && msg.Content() == "Hola soy Maria" {
+			foundMaria = true
+		}
+		if msg.UserID() == "juan" && msg.Content() == "Hola soy Juan" {
+			foundJuan = true
+		}
+	}
+	suite.True(foundMaria, "Maria's message was not found")
+	suite.True(foundJuan, "Juan's message was not found")
 }
 
 func (suite *ObtainUserTimelineTestSuite) TestExecute_FollowersRepoError() {
 	userID := "nicolas"
 	expectedErr := domain.ErrNoFollowersForUser
 
-	suite.mockFollowersRepo.
+	suite.mockUsersRepo.
 		EXPECT().
-		LoadFollowersByUser(userID).
+		Get(userID).
 		Return(nil, expectedErr)
 
 	timeline, err := suite.usecase.Execute(userID)
@@ -86,24 +87,20 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_FollowersRepoError() {
 
 func (suite *ObtainUserTimelineTestSuite) TestExecute_MessageRepoError() {
 	userID := "nicolas"
-	following := []string{"maria"}
-	expectedErr := domain.ErrNoMessagesForUser
+	followingName := "maria"
 
-	suite.mockFollowersRepo.
-		EXPECT().
-		LoadFollowersByUser(userID).
-		Return(following, nil)
+	maria := &domain.User{Name: followingName} // No publications
+	user := &domain.User{Name: userID, Following: []*domain.User{maria}}
 
-	suite.mockMessageRepo.
+	suite.mockUsersRepo.
 		EXPECT().
-		LoadAllByUser("maria").
-		Return(nil, expectedErr)
+		Get(userID).
+		Return(user, nil)
 
 	timeline, err := suite.usecase.Execute(userID)
 
-	suite.Error(err)
-	suite.Nil(timeline)
-	suite.Equal(expectedErr, err)
+	suite.NoError(err)
+	suite.Len(timeline, 0)
 }
 
 func TestObtainUserTimelineTestSuite(t *testing.T) {

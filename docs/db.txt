@@ -1,0 +1,3 @@
+Como BD utilizaría una PostgreSQL
+Debido al rendimiento, escalabilidad, modelo de datos.
+Esta solucion requiere un acceso a BD con mucha escalabilidad es por eso que lo utilizaría.

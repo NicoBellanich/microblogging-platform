@@ -19,3 +19,9 @@ func (ml *MessageList) GetContents() []string {
 	}
 	return contents
 }
+
+func (ml *MessageList) AddMessage(msg *Message) {
+	if msg != nil {
+		*ml = append(*ml, *msg)
+	}
+}

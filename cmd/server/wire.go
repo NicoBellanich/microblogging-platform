@@ -8,6 +8,7 @@ import (
 	"github.com/nicobellanich/migroblogging-platform/config"
 	"github.com/nicobellanich/migroblogging-platform/internal/controllers"
 	repository "github.com/nicobellanich/migroblogging-platform/internal/platform/repository/impl"
+	"github.com/nicobellanich/migroblogging-platform/internal/services"
 	"github.com/nicobellanich/migroblogging-platform/internal/usecase"
 )
 
@@ -19,30 +20,28 @@ func wire() http.Handler {
 	conf := config.Load()
 
 	// Infrastructure: initialize repositories based on environment
-	messageRepository, err := repository.NewMessageRepository(conf)
+	usersRepository, err := repository.NewUsersRepository(conf)
 	if err != nil {
 		panic(err)
 	}
 
-	followersRepository, err := repository.NewFollowersRepository(conf)
-	if err != nil {
-		panic(err)
-	}
+	// Services : different services uses to help Usecases
+	usersService := services.NewUserServices(usersRepository)
 
 	// Use Cases: business logic
-	useCasePublishMessage := usecase.NewPublishMessage(messageRepository)
-	usecaseFollow := usecase.NewFollow(followersRepository)
-	usecaseObtainUserTimeline := usecase.NewObtainUserTimeline(followersRepository, messageRepository)
+	useCasePublishMessage := usecase.NewPublishMessage(usersRepository)
+	usecaseFollow := usecase.NewFollow(usersRepository)
+	usecaseObtainUserTimeline := usecase.NewObtainUserTimeline(usersRepository)
 
 	// Controllers: HTTP handlers
-	messageController := controllers.NewMessageController(useCasePublishMessage)
-	followersController := controllers.NewFollowersController(usecaseFollow)
-	userTimelineController := controllers.NewUserTimelineController(usecaseObtainUserTimeline)
+	usersController := controllers.NewUsersController(usecaseFollow, useCasePublishMessage, usecaseObtainUserTimeline, usersService)
 
 	// HTTP Routes
-	mux.HandleFunc("/publish", messageController.Publish)
-	mux.HandleFunc("/follow", followersController.Follow)
-	mux.HandleFunc("/usertimeline", userTimelineController.ObtainUserTimeline)
+	mux.HandleFunc("/user", usersController.GetUserByUsername)
+	mux.HandleFunc("/user/create", usersController.Create)
+	mux.HandleFunc("/user/timeline", usersController.GetTimeline)
+	mux.HandleFunc("/user/publish", usersController.AddPublication)
+	mux.HandleFunc("/user/following", usersController.AddFollowing)
 
 	return mux
 }

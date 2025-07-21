@@ -10,19 +10,19 @@ import (
 	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository/test"
 )
 
-func NewMessageRepository(conf *config.Config) (repository.IMessageRepository, error) {
-	var mr repository.IMessageRepository
+func NewUsersRepository(conf *config.Config) (repository.IUsersRepository, error) {
+	var ur repository.IUsersRepository
 
 	switch {
 	case conf.IsProdEnv():
-		mr = prod.NewMessageRepository()
+		ur = prod.NewUsersRepository()
 	case conf.IsTestEnv():
-		mr = test.NewMessageRepository()
+		ur = test.NewUsersRepository()
 	case conf.IsLocalEnv():
-		mr = inmemory.NewMessageRepository()
+		ur = inmemory.NewUsersRepository()
 	default:
-		return nil, errors.New("something went wrong loading enviroments for creating MessageRepository")
+		return nil, errors.New("something went wrong loading environments for creating MessageRepository")
 	}
 
-	return mr, nil
+	return ur, nil
 }

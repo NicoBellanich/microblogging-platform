@@ -114,3 +114,69 @@ func (mr *MockIFollowersRepositoryMockRecorder) Save(arg0, arg1 interface{}) *go
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockIFollowersRepository)(nil).Save), arg0, arg1)
 }
+
+// MockIUsersRepository is a mock of IUsersRepository interface.
+type MockIUsersRepository struct {
+	ctrl     *gomock.Controller
+	recorder *MockIUsersRepositoryMockRecorder
+}
+
+// MockIUsersRepositoryMockRecorder is the mock recorder for MockIUsersRepository.
+type MockIUsersRepositoryMockRecorder struct {
+	mock *MockIUsersRepository
+}
+
+// NewMockIUsersRepository creates a new mock instance.
+func NewMockIUsersRepository(ctrl *gomock.Controller) *MockIUsersRepository {
+	mock := &MockIUsersRepository{ctrl: ctrl}
+	mock.recorder = &MockIUsersRepositoryMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockIUsersRepository) EXPECT() *MockIUsersRepositoryMockRecorder {
+	return m.recorder
+}
+
+// Create mocks base method.
+func (m *MockIUsersRepository) Create(arg0 *domain.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockIUsersRepositoryMockRecorder) Create(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIUsersRepository)(nil).Create), arg0)
+}
+
+// Get mocks base method.
+func (m *MockIUsersRepository) Get(arg0 string) (*domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Get", arg0)
+	ret0, _ := ret[0].(*domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Get indicates an expected call of Get.
+func (mr *MockIUsersRepositoryMockRecorder) Get(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockIUsersRepository)(nil).Get), arg0)
+}
+
+// Update mocks base method.
+func (m *MockIUsersRepository) Update(arg0 string, arg1 *domain.User) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockIUsersRepositoryMockRecorder) Update(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIUsersRepository)(nil).Update), arg0, arg1)
+}

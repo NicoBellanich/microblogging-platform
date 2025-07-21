@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,15 +12,6 @@ type Message struct {
 	userID    string    `json:"user_id"`
 	createdAt time.Time `json:"created_at"`
 }
-
-var (
-	ErrContentEmpty       = errors.New("content cannot be empty")
-	ErrContentTooLong     = errors.New("content exceeds 280 characters")
-	ErrUserIDEmpty        = errors.New("userID cannot be empty")
-	ErrInvalidArgument    = errors.New("invalid argument")
-	ErrNoMessagesForUser  = errors.New("user doesn't have any post yet")
-	ErrNoFollowersForUser = errors.New("user doesn't have any followers yet")
-)
 
 // NewMessage add new message with validations
 func NewMessage(content, userID string) (*Message, error) {
