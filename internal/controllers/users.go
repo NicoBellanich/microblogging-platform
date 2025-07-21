@@ -32,23 +32,23 @@ func NewUsersController(
 
 func (controller *UsersController) Create(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		writeJSONError(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	var req dtos.CreateUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		writeJSONError(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
 	if req.UserID == "" {
-		http.Error(w, "Invalid request body (user_id)", http.StatusBadRequest)
+		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
 		return
 	}
 
 	if err := controller.UserService.AddUser(req.UserID); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		writeJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -60,36 +60,30 @@ func (controller *UsersController) Create(w http.ResponseWriter, r *http.Request
 
 func (controller *UsersController) GetUserByUsername(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		writeJSONError(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	var req dtos.GetUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		writeJSONError(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
 	if req.UserID == "" {
-		http.Error(w, "Invalid request body (user_id)", http.StatusBadRequest)
+		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
 		return
 	}
 
 	user, err := controller.UserService.GetUser(req.UserID)
 	if err != nil {
-		http.Error(w, "Failed to obtain user timeline", http.StatusInternalServerError)
+		writeJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
-	}
-
-	var following []string
-
-	for _, f := range user.Following {
-		following = append(following, f.Name)
 	}
 
 	resp := dtos.GetUserResponse{
 		Name:         user.Name,
-		Following:    following,
+		Following:    user.GetAllFollowingUsers(),
 		Publications: user.Publications.GetContents(),
 	}
 
@@ -101,28 +95,28 @@ func (controller *UsersController) GetUserByUsername(w http.ResponseWriter, r *h
 
 func (controller *UsersController) AddPublication(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		writeJSONError(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	var req dtos.CreatePublicationRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		writeJSONError(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
 	if req.UserID == "" {
-		http.Error(w, "Invalid request body (user_id)", http.StatusBadRequest)
+		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
 		return
 	}
 
 	if req.Content == "" {
-		http.Error(w, "Invalid request body (content)", http.StatusBadRequest)
+		writeJSONError(w, "Invalid request body (content)", http.StatusBadRequest)
 		return
 	}
 
 	if err := controller.UsecasePublishMessage.Execute(req.UserID, req.Content); err != nil {
-		http.Error(w, "Failed to publish message", http.StatusInternalServerError)
+		writeJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -133,28 +127,28 @@ func (controller *UsersController) AddPublication(w http.ResponseWriter, r *http
 
 func (controller *UsersController) AddFollowing(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		writeJSONError(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	var req dtos.FollowRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		writeJSONError(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
 	if req.UserID == "" {
-		http.Error(w, "Invalid request body (user_id)", http.StatusBadRequest)
+		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
 		return
 	}
 
 	if req.NewFollow == "" {
-		http.Error(w, "Invalid request body (new_follow)", http.StatusBadRequest)
+		writeJSONError(w, "Invalid request body (new_follow)", http.StatusBadRequest)
 		return
 	}
 
 	if err := controller.UsecaseFollow.Execute(req.UserID, req.NewFollow); err != nil {
-		http.Error(w, "Failed to follow", http.StatusInternalServerError)
+		writeJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -165,19 +159,19 @@ func (controller *UsersController) AddFollowing(w http.ResponseWriter, r *http.R
 
 func (controller *UsersController) GetTimeline(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		writeJSONError(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	var req dtos.GetUserTimelineRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		writeJSONError(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
 	feed, err := controller.UsecaseObtainUserTimeline.Execute(req.UserID)
 	if err != nil {
-		http.Error(w, "Failed to obtain user timeline", http.StatusInternalServerError)
+		writeJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -198,4 +192,14 @@ func (controller *UsersController) GetTimeline(w http.ResponseWriter, r *http.Re
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(resp)
+}
+
+// writeJSONError writes a JSON error response with the given message and status code
+func writeJSONError(w http.ResponseWriter, message string, status int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"error":  message,
+		"status": status,
+	})
 }

@@ -3,39 +3,23 @@ package usecase
 import (
 	"fmt"
 
-	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
+	"github.com/nicobellanich/migroblogging-platform/internal/services"
 )
 
 type Follow struct {
-	UsersRepository repository.IUsersRepository
+	UsersService services.IUserServices
 }
 
-func NewFollow(ur repository.IUsersRepository) *Follow {
+func NewFollow(us services.IUserServices) *Follow {
 	return &Follow{
-		UsersRepository: ur,
+		UsersService: us,
 	}
 }
 
 // Execute runs UseCase Follow
-func (uc *Follow) Execute(userID string, newFollow string) error {
+func (usecase *Follow) Execute(userID string, newFollow string) error {
 
-	// get user
-	usr, err := uc.UsersRepository.Get(userID)
-	if err != nil {
-		return err
-	}
-
-	// get new following
-	usrNewFollow, err := uc.UsersRepository.Get(newFollow)
-	if err != nil {
-		return err
-	}
-
-	// append new following to user
-	usr.AddFollowing(usrNewFollow)
-
-	// update repository
-	err = uc.UsersRepository.Update(usr.Name, usr)
+	err := usecase.UsersService.AddFollowing(userID, newFollow)
 	if err != nil {
 		return err
 	}

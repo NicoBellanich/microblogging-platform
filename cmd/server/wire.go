@@ -29,9 +29,9 @@ func wire() http.Handler {
 	usersService := services.NewUserServices(usersRepository)
 
 	// Use Cases: business logic
-	useCasePublishMessage := usecase.NewPublishMessage(usersRepository)
-	usecaseFollow := usecase.NewFollow(usersRepository)
-	usecaseObtainUserTimeline := usecase.NewObtainUserTimeline(usersRepository)
+	useCasePublishMessage := usecase.NewPublishMessage(usersService)
+	usecaseFollow := usecase.NewFollow(usersService)
+	usecaseObtainUserTimeline := usecase.NewObtainUserTimeline(usersService)
 
 	// Controllers: HTTP handlers
 	usersController := controllers.NewUsersController(usecaseFollow, useCasePublishMessage, usecaseObtainUserTimeline, usersService)

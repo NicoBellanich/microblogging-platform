@@ -6,34 +6,32 @@ import (
 	"fmt"
 
 	"github.com/nicobellanich/migroblogging-platform/internal/domain"
-	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
+	"github.com/nicobellanich/migroblogging-platform/internal/services"
 )
 
 // ObtainUserTimeline handles the logic for retrieving a user's timeline (feed).
 type ObtainUserTimeline struct {
-	UsersRepository repository.IUsersRepository
+	UserServices services.IUserServices
 }
 
 // NewObtainUserTimeline creates a new ObtainUserTimeline use case with the given repositories.
-func NewObtainUserTimeline(ur repository.IUsersRepository) *ObtainUserTimeline {
+func NewObtainUserTimeline(us services.IUserServices) *ObtainUserTimeline {
 	return &ObtainUserTimeline{
-		UsersRepository: ur,
+		UserServices: us,
 	}
 }
 
 // Execute retrieves the timeline for the given user ID.
 // It loads all users that the given user follows, fetches their messages, sorts them by time, and returns the messages.
-func (uc *ObtainUserTimeline) Execute(userID string) (domain.Feed, error) {
+func (usecase *ObtainUserTimeline) Execute(userID string) (domain.Feed, error) {
 
-	// get user
-	usr, err := uc.UsersRepository.Get(userID)
+	user, err := usecase.UserServices.GetUser(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	// build feed
 	var userFeed domain.Feed
-	for _, following := range usr.Following {
+	for _, following := range user.Following {
 		userFeed.AddMessageList(&following.Publications)
 	}
 
