@@ -22,7 +22,10 @@ func (pm *PublishMessage) Execute(userID string, content string) error {
 		return err
 	}
 
-	pm.MessageRepository.Save(newMessage)
+	err = pm.MessageRepository.Save(newMessage)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
