@@ -20,11 +20,17 @@ func wire() http.Handler {
 		panic(err)
 	}
 
+	followersRepository, err := repository.NewFollowersRepository(conf)
+	if err != nil {
+		panic(err)
+	}
+
 	// Services
 	// ...
 
 	// UC
 	useCasePublishMessage := usecase.NewPublishMessage(messageRepository)
+	usecase.NewFollow(followersRepository)
 
 	// Controllers
 	messageController := controllers.NewMessageController(useCasePublishMessage)
