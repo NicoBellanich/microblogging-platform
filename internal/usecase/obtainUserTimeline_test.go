@@ -50,8 +50,6 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_Success() {
 		Get(userID).
 		Return(user, nil)
 
-	// Eliminar cualquier expectativa de Update, solo se espera Get
-
 	timeline, err := suite.usecase.Execute(userID)
 
 	suite.NoError(err)
