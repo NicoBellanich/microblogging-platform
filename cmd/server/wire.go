@@ -11,5 +11,10 @@ func wire() http.Handler {
 
 	config.Load()
 
+	// Infra
+	// Services
+	// Controllers
+	// UC
+
 	return mux
 }
