@@ -18,12 +18,32 @@ A simplified Twitter-like microblogging platform built in Go. Users can post mes
 - **internal/platform/repository/**: Repository interfaces and implementations (in-memory, prod, test)
 - **config/**: Environment and configuration management
 
-## Setup
+## Setup with terminal
 1. Clone this repo
 2. Run `go mod tidy`
 3. Run `go test ./...` to verify everything is OK
 4. Run `go run cmd/api/main.go` to start the server on port :8080
 5. Use the provided Postman collection in `docs/` to test endpoints
+
+## Docker Setup
+
+You can easily run the application using Docker. Make sure you have Docker installed on your system.
+
+### 1. Build the image
+
+```bash
+docker build -t microblogging-app .
+```
+
+### 2. Run the container
+
+```bash
+docker run -p 8080:8080 microblogging-app
+```
+
+This will start the API at [http://localhost:8080](http://localhost:8080).
+
+You can test the endpoints using the provided Postman collection in `docs/` or with the `curl` examples above.
 
 ## API Endpoints
 
@@ -157,27 +177,3 @@ docker run --rm -p 8081:8080 -v "$(pwd)/docs/openapi.yaml:/openapi.yaml" -e SWAG
 ```
 
 Then open your browser [http://localhost:8081](http://localhost:8081) to see and test endpoints.
-
-## Docker Setup
-
-You can easily run the application using Docker. Make sure you have Docker installed on your system.
-
-### 1. Build the image
-
-```bash
-docker build -t microblogging-app .
-```
-
-### 2. Run the container
-
-```bash
-docker run -p 8080:8080 microblogging-app
-```
-
-This will start the API at [http://localhost:8080](http://localhost:8080).
-
-You can test the endpoints using the provided Postman collection in `docs/` or with the `curl` examples above.
-
-
-
-
