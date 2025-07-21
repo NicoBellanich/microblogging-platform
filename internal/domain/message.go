@@ -53,3 +53,20 @@ func (m *Message) UserID() string {
 func (m *Message) CreatedAt() time.Time {
 	return m.createdAt
 }
+
+// SetContent updates the message content with validation
+func (m *Message) SetContent(content string) error {
+	if len(content) == 0 {
+		return errors.New("content cannot be empty")
+	}
+	if len(content) > 280 {
+		return errors.New("content exceeds 280 characters")
+	}
+	m.content = content
+	return nil
+}
+
+// SetCreatedAt updates the message creation time
+func (m *Message) SetCreatedAt(createdAt time.Time) {
+	m.createdAt = createdAt
+}

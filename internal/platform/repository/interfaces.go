@@ -1,3 +1,4 @@
+//go:generate mockgen -source=interfaces.go -destination=../../mocks/repository/repository_mock.go -package=mocks
 package repository
 
 import "github.com/nicobellanich/migroblogging-platform/internal/domain"
