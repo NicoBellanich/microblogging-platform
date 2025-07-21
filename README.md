@@ -150,15 +150,14 @@ curl -X GET http://localhost:8080/user/timeline -d '{"user_id": "alice"}' -H 'Co
 
 ## Visualizar la documentación Swagger/OpenAPI localmente
 
-Puedes levantar Swagger UI fácilmente usando Docker para visualizar la documentación de la API:
+You can run Swagger UI easily using Docker to visualize API documentation:
 
 ```bash
 docker run --rm -p 8081:8080 -v "$(pwd)/docs/openapi.yaml:/openapi.yaml" -e SWAGGER_JSON=/openapi.yaml swaggerapi/swagger-ui
 ```
 
-Luego abre tu navegador en [http://localhost:8081](http://localhost:8081) para ver y probar los endpoints.
+Then open your browser [http://localhost:8081](http://localhost:8081) to see and test endpoints.
 
-Asegúrate de tener Docker instalado y que el archivo `docs/openapi.yaml` esté actualizado.
 
 
 
