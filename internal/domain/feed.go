@@ -48,3 +48,12 @@ func (f *Feed) GetMessagesContent() []string {
 	}
 	return allMessages
 }
+
+// GetAllMessages returns all messages from the Feed as a single slice of Message
+func (f *Feed) GetAllMessages() []Message {
+	var allMessages []Message
+	for _, ml := range *f {
+		allMessages = append(allMessages, ml...)
+	}
+	return allMessages
+}

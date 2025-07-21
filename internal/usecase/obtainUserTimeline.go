@@ -22,10 +22,8 @@ func NewObtainUserTimeline(ur repository.IUsersRepository) *ObtainUserTimeline {
 }
 
 // Execute retrieves the timeline for the given user ID.
-// It loads all users that the given user follows, fetches their messages, sorts them by time, and returns the contents.
-func (uc *ObtainUserTimeline) Execute(userID string) ([]string, error) {
-
-	var timeline []string
+// It loads all users that the given user follows, fetches their messages, sorts them by time, and returns the messages.
+func (uc *ObtainUserTimeline) Execute(userID string) ([]domain.Message, error) {
 
 	// get user
 	usr, err := uc.UsersRepository.Get(userID)
@@ -41,19 +39,18 @@ func (uc *ObtainUserTimeline) Execute(userID string) ([]string, error) {
 
 	userFeed.SortAllMessagesDescending()
 
-	timeline = userFeed.GetMessagesContent()
+	messages := userFeed.GetAllMessages()
 
-	// Optionally print the timeline to the console (for debugging/logging)
-	consolePrintTimeline(userID, timeline)
+	consolePrintTimeline(userID, messages)
 
-	return timeline, nil
+	return messages, nil
 }
 
 // consolePrintTimeline prints the timeline to the console for debugging/logging purposes.
-func consolePrintTimeline(userID string, timeline []string) {
-	fmt.Printf("👤@%s feed ========= \n", userID)
-	for _, m := range timeline {
-		fmt.Printf("💬 %s \n", m)
+func consolePrintTimeline(user string, messages []domain.Message) {
+	fmt.Printf("👤@%s feed ========= \n", user)
+	for _, m := range messages {
+		fmt.Printf("💬 %s - by %s \n", m.Content(), m.UserID())
 	}
 
 	fmt.Println(" ==================================== \n ")

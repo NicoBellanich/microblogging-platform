@@ -1,7 +1,14 @@
 package dtos
 
+type MessageResponse struct {
+	ID        string `json:"id"`
+	UserID    string `json:"user_id"`
+	Content   string `json:"content"`
+	CreatedAt string `json:"created_at"`
+}
+
 type GetUserTimelineResponse struct {
-	Messages []string `json:"messages"`
+	Feeds []MessageResponse `json:"feeds"`
 }
 
 type GetUserResponse struct {

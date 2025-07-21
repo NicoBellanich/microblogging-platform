@@ -178,8 +178,18 @@ func (controller *UsersController) GetTimeline(w http.ResponseWriter, r *http.Re
 		return
 	}
 
+	feeds := make([]dtos.MessageResponse, 0, len(messages))
+	for _, msg := range messages {
+		feeds = append(feeds, dtos.MessageResponse{
+			ID:        msg.ID(),
+			UserID:    msg.UserID(),
+			Content:   msg.Content(),
+			CreatedAt: msg.CreatedAt().Format("2006-01-02T15:04:05Z07:00"),
+		})
+	}
+
 	resp := dtos.GetUserTimelineResponse{
-		Messages: messages,
+		Feeds: feeds,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
