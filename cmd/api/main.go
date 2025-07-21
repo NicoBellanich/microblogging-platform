@@ -2,7 +2,9 @@
 // It initializes and starts the HTTP server.
 package main
 
-import "github.com/nicobellanich/migroblogging-platform/cmd/server"
+import (
+	"github.com/nicobellanich/migroblogging-platform/cmd/server"
+)
 
 // main starts the API server.
 func main() {
