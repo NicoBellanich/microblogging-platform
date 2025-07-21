@@ -404,10 +404,10 @@
 			]
 		},
 		{
-			"name": "Requests Copy",
+			"name": "Requests",
 			"item": [
 				{
-					"name": "Follow",
+					"name": "New Follow",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -421,12 +421,40 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/follow",
+							"raw": "{{baseURL}}/user/following",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
-								"follow"
+								"user",
+								"following"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"nicolas\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"create"
 							]
 						}
 					},
@@ -447,11 +475,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/publish",
+							"raw": "{{baseURL}}/user/publish",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
+								"user",
 								"publish"
 							]
 						}
@@ -459,7 +488,7 @@
 					"response": []
 				},
 				{
-					"name": "UserTimeline",
+					"name": "Get User",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -476,12 +505,381 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/usertimeline",
+							"raw": "{{baseURL}}/user",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
-								"usertimeline"
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Timeline",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"nicolas\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/timeline",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"timeline"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Errors",
+			"item": [
+				{
+					"name": "Create User Void",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User Invalid Body",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Follow Error - user id",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"\",\n    \"new_follow\": \"martin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/following",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"following"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Follow Error - user id new follow void",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"nicolas\",\n    \"new_follow\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/following",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"following"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Follow Error - user does not exist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"aaaaaaaaasdasadsasddsadsa\",\n    \"new_follow\": \"nicolas\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/following",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"following"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Publish Error void content",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"nicolas\",\n    \"content\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/publish",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Publish Error user_id",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"\",\n    \"content\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/publish",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Publish Error User does not exist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"nicolas\",\n    \"content\": \"content\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/publish",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User User not found",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"nicolas\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Void",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Timeline Void user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/timeline",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"timeline"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User User not found",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"asdadsdsadasdsadsa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/timeline",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"timeline"
 							]
 						}
 					},
