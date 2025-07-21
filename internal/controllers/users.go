@@ -81,15 +81,9 @@ func (controller *UsersController) GetUserByUsername(w http.ResponseWriter, r *h
 		return
 	}
 
-	var following []string
-
-	for _, f := range user.Following {
-		following = append(following, f.Name)
-	}
-
 	resp := dtos.GetUserResponse{
 		Name:         user.Name,
-		Following:    following,
+		Following:    user.GetAllFollowingUsers(),
 		Publications: user.Publications.GetContents(),
 	}
 
