@@ -18,13 +18,13 @@ func NewPublishMessage(mr repository.IMessageRepository) *PublishMessage {
 }
 
 // Execute runs UseCase PublishMessage
-func (pm *PublishMessage) Execute(userID string, content string) error {
+func (uc *PublishMessage) Execute(userID string, content string) error {
 	newMessage, err := domain.NewMessage(content, userID)
 	if err != nil {
 		return err
 	}
 
-	err = pm.MessageRepository.Save(newMessage)
+	err = uc.MessageRepository.Save(newMessage)
 	if err != nil {
 		return err
 	}

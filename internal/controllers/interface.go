@@ -9,3 +9,7 @@ type IMessageController interface {
 type IFollowersController interface {
 	Follow(http.ResponseWriter, *http.Request)
 }
+
+type IUserTimeline interface {
+	ObtainUserTimeline(http.ResponseWriter, *http.Request)
+}

@@ -17,9 +17,9 @@ func NewFollow(fr repository.IFollowersRepository) *Follow {
 }
 
 // Execute runs UseCase Follow
-func (f *Follow) Execute(userID string, newFollow string) error {
+func (uc *Follow) Execute(userID string, newFollow string) error {
 
-	err := f.FollowersRepository.Save(userID, newFollow)
+	err := uc.FollowersRepository.Save(userID, newFollow)
 	if err != nil {
 		return err
 	}
