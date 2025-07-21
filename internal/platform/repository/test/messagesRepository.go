@@ -1,6 +1,9 @@
 package test
 
-import "github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
+import (
+	"github.com/nicobellanich/migroblogging-platform/internal/domain"
+	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
+)
 
 func NewMessageRepository() repository.IMessageRepository {
 	return &MessageRepository{}
@@ -8,14 +11,10 @@ func NewMessageRepository() repository.IMessageRepository {
 
 type MessageRepository struct{}
 
-func (mr *MessageRepository) Save() {
+func (mr *MessageRepository) Save(msg *domain.Message) error {
 	panic("implement") // this should be implemented in real prod code
 }
 
-func (mr *MessageRepository) Load() {
-	panic("implement") // this should be implemented in real prod code
-}
-
-func (mr *MessageRepository) LoadAll() {
+func (mr *MessageRepository) LoadAllByUser(userID string) ([]domain.Message, error) {
 	panic("implement") // this should be implemented in real prod code
 }

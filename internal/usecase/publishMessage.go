@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"github.com/nicobellanich/migroblogging-platform/internal/domain"
 	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
 )
 
@@ -15,6 +16,13 @@ func NewPublishMessage(mr repository.IMessageRepository) *PublishMessage {
 }
 
 // Execute runs UseCase PublishMessage
-func (pm *PublishMessage) Execute() {
-	panic("implement")
+func (pm *PublishMessage) Execute(userID string, content string) error {
+	newMessage, err := domain.NewMessage(content, userID)
+	if err != nil {
+		return err
+	}
+
+	pm.MessageRepository.Save(newMessage)
+
+	return nil
 }

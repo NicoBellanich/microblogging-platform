@@ -1,21 +1,56 @@
 package inmemory
 
-import "github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
+import (
+	"errors"
+	"sync"
+
+	"github.com/nicobellanich/migroblogging-platform/internal/domain"
+	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
+)
 
 func NewMessageRepository() repository.IMessageRepository {
-	return &MessageRepository{}
+	return &MessageRepository{
+		messages: make([]domain.Message, 0),
+	}
 }
 
-type MessageRepository struct{}
-
-func (mr *MessageRepository) Save() {
-	panic("implement")
+type MessageRepository struct {
+	messages []domain.Message
+	mutex    sync.Mutex
 }
 
-func (mr *MessageRepository) Load() {
-	panic("implement")
+func (mr *MessageRepository) Save(msg *domain.Message) error {
+	if msg == nil {
+		return errors.New("invalid argument")
+	}
+
+	mr.mutex.Lock()
+	defer mr.mutex.Unlock()
+
+	newMsg := *msg
+	mr.messages = append(mr.messages, newMsg)
+	return nil
 }
 
-func (mr *MessageRepository) LoadAll() {
-	panic("implement")
+func (mr *MessageRepository) LoadAllByUser(userID string) ([]domain.Message, error) {
+	if userID == "" {
+		return nil, errors.New("invalid argument")
+	}
+
+	mr.mutex.Lock()
+	defer mr.mutex.Unlock()
+
+	var userMessages []domain.Message
+	for _, msg := range mr.messages {
+		if msg.UserID() == userID {
+			msgCopy := msg
+			userMessages = append(userMessages, msgCopy)
+		}
+	}
+
+	if len(userMessages) == 0 {
+		return nil, errors.New("user doesn't have any post yet")
+	}
+
+	return userMessages, nil
 }

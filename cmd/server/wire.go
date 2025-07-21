@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/nicobellanich/migroblogging-platform/config"
+	"github.com/nicobellanich/migroblogging-platform/internal/controllers"
 	repository "github.com/nicobellanich/migroblogging-platform/internal/platform/repository/impl"
 	"github.com/nicobellanich/migroblogging-platform/internal/usecase"
 )
@@ -14,14 +15,22 @@ func wire() http.Handler {
 	conf := config.Load()
 
 	// Infra
-	messageRepository := repository.NewMessageRepository(conf)
+	messageRepository, err := repository.NewMessageRepository(conf)
+	if err != nil {
+		panic(err)
+	}
 
 	// Services
+	// ...
 
 	// UC
-	usecase.NewPublishMessage(messageRepository)
+	useCasePublishMessage := usecase.NewPublishMessage(messageRepository)
 
 	// Controllers
+	messageController := controllers.NewMessageController(useCasePublishMessage)
+
+	// Handlers
+	mux.HandleFunc("/publish", messageController.Publish)
 
 	return mux
 }

@@ -1,6 +1,8 @@
 package impl
 
 import (
+	"errors"
+
 	"github.com/nicobellanich/migroblogging-platform/config"
 	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
 	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository/inmemory"
@@ -8,20 +10,19 @@ import (
 	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository/test"
 )
 
-func NewMessageRepository(conf *config.Config) repository.IMessageRepository {
+func NewMessageRepository(conf *config.Config) (repository.IMessageRepository, error) {
 	var mr repository.IMessageRepository
 
-	if conf.IsProdEnv() {
+	switch {
+	case conf.IsProdEnv():
 		mr = prod.NewMessageRepository()
-	}
-
-	if conf.IsTestEnv() {
+	case conf.IsTestEnv():
 		mr = test.NewMessageRepository()
-	}
-
-	if conf.IsLocalEnv() {
+	case conf.IsLocalEnv():
 		mr = inmemory.NewMessageRepository()
+	default:
+		return nil, errors.New("something went wrong loading enviroments for creating MessageRepository")
 	}
 
-	return mr
+	return mr, nil
 }
