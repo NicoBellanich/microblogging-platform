@@ -5,7 +5,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	"github.com/nicobellanich/migroblogging-platform/internal/domain"
-	mocks "github.com/nicobellanich/migroblogging-platform/internal/mocks/repository"
+	mocks "github.com/nicobellanich/migroblogging-platform/internal/mocks/services"
 	"github.com/nicobellanich/migroblogging-platform/internal/usecase"
 	"github.com/stretchr/testify/assert"
 )
