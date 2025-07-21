@@ -1,6 +1,6 @@
 package prod
 
-import "github.com/nicobellanich/migroblogging-platform/internal/repository"
+import "github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
 
 func NewMessageRepository() repository.IMessageRepository {
 	return &MessageRepository{}
