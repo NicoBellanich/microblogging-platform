@@ -54,8 +54,19 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_Success() {
 
 	suite.NoError(err)
 	suite.Len(timeline, 2)
-	suite.Contains(timeline[0], "Maria")
-	suite.Contains(timeline[1], "Juan")
+
+	// Check that the correct messages are present
+	var foundMaria, foundJuan bool
+	for _, msg := range timeline {
+		if msg.UserID() == "maria" && msg.Content() == "Hola soy Maria" {
+			foundMaria = true
+		}
+		if msg.UserID() == "juan" && msg.Content() == "Hola soy Juan" {
+			foundJuan = true
+		}
+	}
+	suite.True(foundMaria, "Maria's message was not found")
+	suite.True(foundJuan, "Juan's message was not found")
 }
 
 func (suite *ObtainUserTimelineTestSuite) TestExecute_FollowersRepoError() {
@@ -78,7 +89,7 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_MessageRepoError() {
 	userID := "nicolas"
 	followingName := "maria"
 
-	maria := &domain.User{Name: followingName} // Sin publicaciones
+	maria := &domain.User{Name: followingName} // No publications
 	user := &domain.User{Name: userID, Following: []*domain.User{maria}}
 
 	suite.mockUsersRepo.

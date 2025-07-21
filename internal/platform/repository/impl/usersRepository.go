@@ -21,7 +21,7 @@ func NewUsersRepository(conf *config.Config) (repository.IUsersRepository, error
 	case conf.IsLocalEnv():
 		ur = inmemory.NewUsersRepository()
 	default:
-		return nil, errors.New("something went wrong loading enviroments for creating MessageRepository")
+		return nil, errors.New("something went wrong loading environments for creating MessageRepository")
 	}
 
 	return ur, nil
