@@ -1,13 +1,410 @@
 {
 	"info": {
-		"_postman_id": "8b033a22-a70e-49ee-a6ac-646f52550b05",
-		"name": "microblogging-platform",
+		"_postman_id": "864fab0e-7b4a-49df-93df-6d9d79a2257c",
+		"name": "microblogging-platform-v2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "10984451"
 	},
 	"item": [
 		{
-			"name": "Requests",
+			"name": "RealTimeExample",
+			"item": [
+				{
+					"name": "Crear el usuario A",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear el usuario B",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userB\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear el usuario C",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userC\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener A",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener timeline de A (vacío aun)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/timeline",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"timeline"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario B publica algo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userB\",\n    \"content\": \"I'd love to be followed by someone\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/publish",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario B publica nuevamente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userB\",\n    \"content\": \"I'd love to be followed by someone again\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/publish",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario A sigue a usuario B",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userA\",\n    \"new_follow\": \"userB\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/following",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"following"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener timeline de A (con contenido de B)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/timeline",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"timeline"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario C publica algo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userC\",\n    \"content\": \"I'm new here\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/publish",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario C publica algo nuevamente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userC\",\n    \"content\": \"Second tweet!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/publish",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener timeline de A (devuelve solo B)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/timeline",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"timeline"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario A sigue usuario C",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userA\",\n    \"new_follow\": \"userC\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/following",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"following"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener timeline de A (devuelve B + C)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"userA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/timeline",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"timeline"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Requests Copy",
 			"item": [
 				{
 					"name": "Follow",
@@ -72,283 +469,6 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"user_id\": \"nicolas\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/usertimeline",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"usertimeline"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "RealTimeExample",
-			"item": [
-				{
-					"name": "1. Get user A timeline should return nothing",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"userA\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/usertimeline",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"usertimeline"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "2. User B publishes something Copy",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"userB\",\n    \"content\": \"I'd love to be followed by someone\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/publish",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"publish"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "3. User B publishes something",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"userB\",\n    \"content\": \"I'd love to be followed by someone again\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/publish",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"publish"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "4.User A follows user B",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"userA\",\n    \"new_follow\": \"userB\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/follow",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"follow"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "5. Get user A timeline should return something",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"userA\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/usertimeline",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"usertimeline"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "6. New user publishes",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"userC\",\n    \"content\": \"I'm new here\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/publish",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"publish"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "7. New user publishes again",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"userC\",\n    \"content\": \"Second tweet!\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/publish",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"publish"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "8. Get user A timeline should NOT return C",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"userA\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/usertimeline",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"usertimeline"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "9.User A follows user C",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"userA\",\n    \"new_follow\": \"userC\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/follow",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"follow"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "10. Get user A timeline SHOULD return C",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"userA\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
