@@ -1,3 +1,4 @@
+// Package server provides the HTTP server setup for the microblogging platform.
 package server
 
 import (
@@ -6,6 +7,7 @@ import (
 	"net/http"
 )
 
+// Run initializes the HTTP handlers and starts the server on port 8080.
 func Run() {
 	mux := wire()
 	fmt.Println("Server running on :8080")
