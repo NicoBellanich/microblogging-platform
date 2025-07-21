@@ -42,10 +42,17 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
+func TriggerEnv() {
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		log.Println("⚠️  Could't find .env file")
+	}
+}
+
 // Load load file .env (if exist) and then build the config
 func Load() *Config {
 
-	_ = godotenv.Load()
+	TriggerEnv()
 
 	envStr := getEnv("ENVIRONMENT", "local")
 
