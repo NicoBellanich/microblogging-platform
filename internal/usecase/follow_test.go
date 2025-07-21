@@ -1,12 +1,12 @@
 package usecase_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
 
+	"github.com/nicobellanich/migroblogging-platform/internal/domain"
 	mocks "github.com/nicobellanich/migroblogging-platform/internal/mocks/repository"
 	"github.com/nicobellanich/migroblogging-platform/internal/usecase"
 )
@@ -44,7 +44,7 @@ func (suite *FollowUseCaseTestSuite) TestExecute_Success() {
 func (suite *FollowUseCaseTestSuite) TestExecute_ErrorFromRepo() {
 	userID := "nicolas"
 	newFollow := "maria"
-	expectedErr := fmt.Errorf("could not save follow")
+	expectedErr := domain.ErrInvalidArgument
 
 	suite.mockFollowersRepo.
 		EXPECT().
@@ -52,7 +52,7 @@ func (suite *FollowUseCaseTestSuite) TestExecute_ErrorFromRepo() {
 		Return(expectedErr)
 
 	err := suite.usecase.Execute(userID, newFollow)
-	suite.EqualError(err, expectedErr.Error())
+	suite.Equal(expectedErr, err)
 }
 
 func TestFollowUseCaseTestSuite(t *testing.T) {

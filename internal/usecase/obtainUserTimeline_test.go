@@ -1,7 +1,6 @@
 package usecase_test
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -71,7 +70,7 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_Success() {
 
 func (suite *ObtainUserTimelineTestSuite) TestExecute_FollowersRepoError() {
 	userID := "nicolas"
-	expectedErr := fmt.Errorf("failed to load followers")
+	expectedErr := domain.ErrNoFollowersForUser
 
 	suite.mockFollowersRepo.
 		EXPECT().
@@ -82,13 +81,13 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_FollowersRepoError() {
 
 	suite.Error(err)
 	suite.Nil(timeline)
-	suite.EqualError(err, expectedErr.Error())
+	suite.Equal(expectedErr, err)
 }
 
 func (suite *ObtainUserTimelineTestSuite) TestExecute_MessageRepoError() {
 	userID := "nicolas"
 	following := []string{"maria"}
-	expectedErr := fmt.Errorf("failed to load messages")
+	expectedErr := domain.ErrNoMessagesForUser
 
 	suite.mockFollowersRepo.
 		EXPECT().
@@ -104,7 +103,7 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_MessageRepoError() {
 
 	suite.Error(err)
 	suite.Nil(timeline)
-	suite.EqualError(err, expectedErr.Error())
+	suite.Equal(expectedErr, err)
 }
 
 func TestObtainUserTimelineTestSuite(t *testing.T) {
