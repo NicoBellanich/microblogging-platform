@@ -47,6 +47,11 @@ func (suite *FollowUseCaseTestSuite) TestExecute_Success() {
 		Get(newFollow).
 		Return(userToFollow, nil)
 
+	suite.mockUsersRepo.
+		EXPECT().
+		Update(userID, user).
+		Return(nil)
+
 	err := suite.usecase.Execute(userID, newFollow)
 	suite.NoError(err)
 	suite.Len(user.Following, 1)

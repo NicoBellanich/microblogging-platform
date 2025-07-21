@@ -50,14 +50,16 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_Success() {
 		Get(userID).
 		Return(user, nil)
 
+	// Eliminar cualquier expectativa de Update, solo se espera Get
+
 	timeline, err := suite.usecase.Execute(userID)
 
 	suite.NoError(err)
-	suite.Len(timeline, 2)
+	suite.Len(timeline.GetAllMessages(), 2)
 
 	// Check that the correct messages are present
 	var foundMaria, foundJuan bool
-	for _, msg := range timeline {
+	for _, msg := range timeline.GetAllMessages() {
 		if msg.UserID() == "maria" && msg.Content() == "Hola soy Maria" {
 			foundMaria = true
 		}

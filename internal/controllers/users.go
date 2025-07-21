@@ -52,8 +52,9 @@ func (controller *UsersController) Create(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("User created successfully"))
+	json.NewEncoder(w).Encode(map[string]interface{}{"message": "User created successfully", "status": http.StatusCreated})
 
 }
 
@@ -125,8 +126,9 @@ func (controller *UsersController) AddPublication(w http.ResponseWriter, r *http
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("Message published successfully"))
+	json.NewEncoder(w).Encode(map[string]interface{}{"message": "Message published successfully", "status": http.StatusCreated})
 }
 
 func (controller *UsersController) AddFollowing(w http.ResponseWriter, r *http.Request) {
@@ -156,8 +158,9 @@ func (controller *UsersController) AddFollowing(w http.ResponseWriter, r *http.R
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("New Follower added successfully"))
+	json.NewEncoder(w).Encode(map[string]interface{}{"message": "New Follower added successfully", "status": http.StatusCreated})
 }
 
 func (controller *UsersController) GetTimeline(w http.ResponseWriter, r *http.Request) {
