@@ -1,6 +1,10 @@
 package usecase
 
-import "github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
+import (
+	"fmt"
+
+	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
+)
 
 type Follow struct {
 	FollowersRepository repository.IFollowersRepository
@@ -19,6 +23,8 @@ func (f *Follow) Execute(userID string, newFollow string) error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Printf("👤@%s , now is following  👤@%s \n", userID, newFollow)
 
 	return nil
 }

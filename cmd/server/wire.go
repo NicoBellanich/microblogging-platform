@@ -30,13 +30,15 @@ func wire() http.Handler {
 
 	// UC
 	useCasePublishMessage := usecase.NewPublishMessage(messageRepository)
-	usecase.NewFollow(followersRepository)
+	usecaseFollow := usecase.NewFollow(followersRepository)
 
 	// Controllers
 	messageController := controllers.NewMessageController(useCasePublishMessage)
+	followersController := controllers.NewFollowersController(usecaseFollow)
 
 	// Handlers
 	mux.HandleFunc("/publish", messageController.Publish)
+	mux.HandleFunc("/follow", followersController.Follow)
 
 	return mux
 }

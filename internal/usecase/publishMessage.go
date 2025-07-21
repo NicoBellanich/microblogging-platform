@@ -29,7 +29,7 @@ func (pm *PublishMessage) Execute(userID string, content string) error {
 		return err
 	}
 
-	fmt.Printf("👤@%s , just published - %s ", newMessage.UserID(), newMessage.Content())
+	fmt.Printf("👤@%s , just published - %s \n ", newMessage.UserID(), newMessage.Content())
 
 	return nil
 }
