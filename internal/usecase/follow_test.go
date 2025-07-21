@@ -22,7 +22,7 @@ type FollowUseCaseTestSuite struct {
 
 func (suite *FollowUseCaseTestSuite) SetupTest() {
 	suite.ctrl = gomock.NewController(suite.T())
-	suite.mockFollowersRepo = mocks.NewMockIFollowersRepository(suite.ctrl)
+	suite.mockUsersRepo = mocks.NewMockIUsersRepository(suite.ctrl)
 	suite.usecase = usecase.NewFollow(suite.mockUsersRepo)
 }
 
@@ -34,13 +34,23 @@ func (suite *FollowUseCaseTestSuite) TestExecute_Success() {
 	userID := "nicolas"
 	newFollow := "maria"
 
-	suite.mockFollowersRepo.
+	user := &domain.User{Name: userID}
+	userToFollow := &domain.User{Name: newFollow}
+
+	suite.mockUsersRepo.
 		EXPECT().
-		Save(userID, newFollow).
-		Return(nil)
+		Get(userID).
+		Return(user, nil)
+
+	suite.mockUsersRepo.
+		EXPECT().
+		Get(newFollow).
+		Return(userToFollow, nil)
 
 	err := suite.usecase.Execute(userID, newFollow)
 	suite.NoError(err)
+	suite.Len(user.Following, 1)
+	suite.Equal(newFollow, user.Following[0].Name)
 }
 
 func (suite *FollowUseCaseTestSuite) TestExecute_ErrorFromRepo() {
@@ -48,10 +58,10 @@ func (suite *FollowUseCaseTestSuite) TestExecute_ErrorFromRepo() {
 	newFollow := "maria"
 	expectedErr := domain.ErrInvalidArgument
 
-	suite.mockFollowersRepo.
+	suite.mockUsersRepo.
 		EXPECT().
-		Save(userID, newFollow).
-		Return(expectedErr)
+		Get(userID).
+		Return(nil, expectedErr)
 
 	err := suite.usecase.Execute(userID, newFollow)
 	suite.Equal(expectedErr, err)
