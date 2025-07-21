@@ -59,5 +59,5 @@ func consolePrintTimeline(userID string, timeline []string) {
 		fmt.Printf("💬 %s \n", m)
 	}
 
-	fmt.Println(" ==================================== \n")
+	fmt.Println(" ==================================== \n ")
 }
