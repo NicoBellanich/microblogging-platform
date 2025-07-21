@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"fmt"
+
 	"github.com/nicobellanich/migroblogging-platform/internal/domain"
 	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
 )
@@ -26,6 +28,8 @@ func (pm *PublishMessage) Execute(userID string, content string) error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Printf("👤@%s , just published - %s ", newMessage.UserID(), newMessage.Content())
 
 	return nil
 }
