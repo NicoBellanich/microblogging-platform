@@ -36,13 +36,7 @@ func (uc *ObtainUserTimeline) Execute(userID string) ([]string, error) {
 	// build feed
 	var userFeed domain.Feed
 	for _, following := range usr.Following {
-		following, err := uc.UsersRepository.Get(following.Name)
-		if err != nil {
-			return nil, err
-		}
-
 		userFeed.AddMessageList(&following.Publications)
-
 	}
 
 	userFeed.SortAllMessagesDescending()

@@ -35,7 +35,7 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_Success() {
 	followingName1 := "maria"
 	followingName2 := "juan"
 
-	user := &domain.User{Name: userID, Following: []domain.User{{Name: followingName1}, {Name: followingName2}}}
+	user := &domain.User{Name: userID, Following: []*domain.User{{Name: followingName1}, {Name: followingName2}}}
 
 	msgJuan, _ := domain.NewMessage("Hola soy Juan", "juan")
 	juan := &domain.User{Name: followingName2}
@@ -88,7 +88,7 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_MessageRepoError() {
 	userID := "nicolas"
 	followingName := "maria"
 
-	user := &domain.User{Name: userID, Following: []domain.User{{Name: followingName}}}
+	user := &domain.User{Name: userID, Following: []*domain.User{{Name: followingName}}}
 
 	suite.mockUsersRepo.
 		EXPECT().

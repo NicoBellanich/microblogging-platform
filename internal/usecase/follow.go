@@ -29,7 +29,7 @@ func (uc *Follow) Execute(userID string, newFollow string) error {
 		return err
 	}
 
-	usr.AddFollowing(*usrNewFollow)
+	usr.AddFollowing(usrNewFollow)
 
 	fmt.Printf("👤@%s , now is following  👤@%s \n", userID, newFollow)
 

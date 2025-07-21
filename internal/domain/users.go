@@ -2,7 +2,7 @@ package domain
 
 type User struct {
 	Name         string
-	Following    []User
+	Following    []*User
 	Publications MessageList
 }
 
@@ -16,8 +16,10 @@ func (user *User) AddPublication(msg Message) {
 	user.Publications.AddMessage(&msg)
 }
 
-func (user *User) AddFollowing(newFollowing User) {
-	user.Following = append(user.Following, newFollowing)
+func (user *User) AddFollowing(newFollowing *User) {
+	if newFollowing != nil {
+		user.Following = append(user.Following, newFollowing)
+	}
 }
 
 func (user *User) GetAllPublications() MessageList {

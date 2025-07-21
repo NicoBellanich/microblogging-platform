@@ -22,7 +22,7 @@ func (mc *MessageController) Publish(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var req dtos.PublishRequest
+	var req dtos.CreatePublicationRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return

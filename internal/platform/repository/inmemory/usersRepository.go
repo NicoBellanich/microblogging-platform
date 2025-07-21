@@ -8,13 +8,13 @@ import (
 )
 
 type UsersRepository struct {
-	users map[string]domain.User
+	users map[string]*domain.User
 	mutex sync.Mutex
 }
 
 func NewUsersRepository() repository.IUsersRepository {
 	return &UsersRepository{
-		users: make(map[string]domain.User),
+		users: make(map[string]*domain.User),
 	}
 }
 
@@ -30,8 +30,7 @@ func (ur *UsersRepository) Create(user *domain.User) error {
 		return domain.ErrUserAlreadyExists
 	}
 
-	userCopy := *user
-	ur.users[user.Name] = userCopy
+	ur.users[user.Name] = user
 	return nil
 }
 
@@ -50,8 +49,7 @@ func (ur *UsersRepository) Update(userID string, user *domain.User) error {
 		return domain.ErrUserNotFound
 	}
 
-	userCopy := *user
-	ur.users[userID] = userCopy
+	ur.users[userID] = user
 	return nil
 }
 
@@ -68,6 +66,5 @@ func (ur *UsersRepository) Get(userID string) (*domain.User, error) {
 		return nil, domain.ErrUserNotFound
 	}
 
-	userCopy := user
-	return &userCopy, nil
+	return user, nil
 }
