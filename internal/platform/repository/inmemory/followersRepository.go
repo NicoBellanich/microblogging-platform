@@ -1,9 +1,9 @@
 package inmemory
 
 import (
-	"errors"
 	"sync"
 
+	"github.com/nicobellanich/migroblogging-platform/internal/domain"
 	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
 )
 
@@ -20,7 +20,7 @@ func NewFollowersRepository() repository.IFollowersRepository {
 
 func (fr *FollowersRepository) Save(userID, followerID string) error {
 	if userID == "" || followerID == "" {
-		return errors.New("invalid argument")
+		return domain.ErrInvalidArgument
 	}
 
 	fr.mutex.Lock()
@@ -43,7 +43,7 @@ func (fr *FollowersRepository) Save(userID, followerID string) error {
 
 func (fr *FollowersRepository) LoadFollowersByUser(userID string) ([]string, error) {
 	if userID == "" {
-		return nil, errors.New("invalid argument")
+		return nil, domain.ErrInvalidArgument
 	}
 
 	fr.mutex.Lock()
@@ -51,7 +51,7 @@ func (fr *FollowersRepository) LoadFollowersByUser(userID string) ([]string, err
 
 	followers, exists := fr.followers[userID]
 	if !exists {
-		return nil, errors.New("user doesn't have any followers yet")
+		return nil, domain.ErrNoFollowersForUser
 	}
 
 	// create copy to avoid external modifications

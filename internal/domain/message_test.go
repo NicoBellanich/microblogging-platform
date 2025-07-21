@@ -30,7 +30,7 @@ func (s *MessageTestSuite) TestNewMessageEmptyContent() {
 
 	s.Error(err)
 	s.Nil(msg)
-	s.Equal("content cannot be empty", err.Error())
+	s.Equal(ErrContentEmpty, err)
 }
 
 func (s *MessageTestSuite) TestNewMessageContentExceedsLimit() {
@@ -39,7 +39,7 @@ func (s *MessageTestSuite) TestNewMessageContentExceedsLimit() {
 
 	s.Error(err)
 	s.Nil(msg)
-	s.Equal("content exceeds 280 characters", err.Error())
+	s.Equal(ErrContentTooLong, err)
 }
 
 func (s *MessageTestSuite) TestNewMessageEmptyUserID() {
@@ -47,7 +47,7 @@ func (s *MessageTestSuite) TestNewMessageEmptyUserID() {
 
 	s.Error(err)
 	s.Nil(msg)
-	s.Equal("userID cannot be empty", err.Error())
+	s.Equal(ErrUserIDEmpty, err)
 }
 
 func TestMessageSuite(t *testing.T) {

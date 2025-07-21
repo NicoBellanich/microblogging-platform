@@ -32,7 +32,10 @@ func (uc *ObtainUserTimeline) Execute(userID string) ([]string, error) {
 	// Load the list of users that userID follows
 	followers, err := uc.FollowersRepository.LoadFollowersByUser(userID)
 	if err != nil {
-		return nil, err
+		if err == domain.ErrInvalidArgument || err == domain.ErrNoFollowersForUser {
+			return nil, err
+		}
+		return nil, fmt.Errorf("failed to load followers: %w", err)
 	}
 
 	// For each followed user, load their messages
@@ -41,7 +44,10 @@ func (uc *ObtainUserTimeline) Execute(userID string) ([]string, error) {
 	for _, f := range followers {
 		userMessages, err := uc.MessageRepository.LoadAllByUser(f)
 		if err != nil {
-			return nil, err
+			if err == domain.ErrInvalidArgument || err == domain.ErrNoMessagesForUser {
+				return nil, err
+			}
+			return nil, fmt.Errorf("failed to load messages: %w", err)
 		}
 		messages = append(messages, userMessages...)
 	}

@@ -1,7 +1,6 @@
 package inmemory
 
 import (
-	"errors"
 	"sync"
 
 	"github.com/nicobellanich/migroblogging-platform/internal/domain"
@@ -21,7 +20,7 @@ type MessageRepository struct {
 
 func (mr *MessageRepository) Save(msg *domain.Message) error {
 	if msg == nil {
-		return errors.New("invalid argument")
+		return domain.ErrInvalidArgument
 	}
 
 	mr.mutex.Lock()
@@ -34,7 +33,7 @@ func (mr *MessageRepository) Save(msg *domain.Message) error {
 
 func (mr *MessageRepository) LoadAllByUser(userID string) ([]domain.Message, error) {
 	if userID == "" {
-		return nil, errors.New("invalid argument")
+		return nil, domain.ErrInvalidArgument
 	}
 
 	mr.mutex.Lock()
@@ -49,7 +48,7 @@ func (mr *MessageRepository) LoadAllByUser(userID string) ([]domain.Message, err
 	}
 
 	if len(userMessages) == 0 {
-		return nil, errors.New("user doesn't have any post yet")
+		return nil, domain.ErrNoMessagesForUser
 	}
 
 	return userMessages, nil

@@ -27,7 +27,11 @@ func (uc *PublishMessage) Execute(userID string, content string) error {
 	// Validate and create the message domain object
 	newMessage, err := domain.NewMessage(content, userID)
 	if err != nil {
-		return err
+		if err == domain.ErrContentEmpty || err == domain.ErrContentTooLong || err == domain.ErrUserIDEmpty {
+			return err
+		}
+		// handle other errors
+		return fmt.Errorf("failed to create message: %w", err)
 	}
 
 	// Save the message using the repository
