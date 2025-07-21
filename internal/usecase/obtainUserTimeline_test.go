@@ -35,8 +35,6 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_Success() {
 	followingName1 := "maria"
 	followingName2 := "juan"
 
-	user := &domain.User{Name: userID, Following: []*domain.User{{Name: followingName1}, {Name: followingName2}}}
-
 	msgJuan, _ := domain.NewMessage("Hola soy Juan", "juan")
 	juan := &domain.User{Name: followingName2}
 	juan.Publications.AddMessage(msgJuan)
@@ -45,20 +43,12 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_Success() {
 	maria := &domain.User{Name: followingName1}
 	maria.Publications.AddMessage(msgMaria)
 
+	user := &domain.User{Name: userID, Following: []*domain.User{maria, juan}}
+
 	suite.mockUsersRepo.
 		EXPECT().
 		Get(userID).
 		Return(user, nil)
-
-	suite.mockUsersRepo.
-		EXPECT().
-		Get(followingName1).
-		Return(maria, nil)
-
-	suite.mockUsersRepo.
-		EXPECT().
-		Get(followingName2).
-		Return(juan, nil)
 
 	timeline, err := suite.usecase.Execute(userID)
 
@@ -88,23 +78,18 @@ func (suite *ObtainUserTimelineTestSuite) TestExecute_MessageRepoError() {
 	userID := "nicolas"
 	followingName := "maria"
 
-	user := &domain.User{Name: userID, Following: []*domain.User{{Name: followingName}}}
+	maria := &domain.User{Name: followingName} // Sin publicaciones
+	user := &domain.User{Name: userID, Following: []*domain.User{maria}}
 
 	suite.mockUsersRepo.
 		EXPECT().
 		Get(userID).
 		Return(user, nil)
 
-	suite.mockUsersRepo.
-		EXPECT().
-		Get(followingName).
-		Return(nil, domain.ErrNoMessagesForUser)
-
 	timeline, err := suite.usecase.Execute(userID)
 
-	suite.Error(err)
-	suite.Nil(timeline)
-	suite.Equal(domain.ErrNoMessagesForUser, err)
+	suite.NoError(err)
+	suite.Len(timeline, 0)
 }
 
 func TestObtainUserTimelineTestSuite(t *testing.T) {
