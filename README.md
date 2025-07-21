@@ -26,29 +26,139 @@ A simplified Twitter-like microblogging platform built in Go. Users can post mes
 5. Use the provided Postman collection in `docs/` to test endpoints
 
 ## API Endpoints
-- `POST /publish` – Publish a new message
-- `POST /follow` – Follow a new user
-- `GET /usertimeline` – Get the timeline for a user
+
+### Create User
+- **POST** `/user/create`
+- **Body:**
+```json
+{
+  "user_id": "alice"
+}
+```
+- **Response:**
+```json
+{
+  "message": "User created successfully",
+  "status": 201
+}
+```
+
+### Get User by Username
+- **GET** `/user`
+- **Body:**
+```json
+{
+  "user_id": "alice"
+}
+```
+- **Response:**
+```json
+{
+  "username": "alice",
+  "following": ["bob"],
+  "publications": ["Hello world!", ...]
+}
+```
+
+### Get User Timeline
+- **GET** `/user/timeline`
+- **Body:**
+```json
+{
+  "user_id": "alice"
+}
+```
+- **Response:**
+```json
+{
+  "feed": [
+    {
+      "id": "...",
+      "user_id": "bob",
+      "content": "Hello from bob!",
+      "created_at": "2024-06-01T12:00:00Z"
+    },
+    ...
+  ]
+}
+```
+
+### Publish a Message
+- **POST** `/user/publish`
+- **Body:**
+```json
+{
+  "user_id": "alice",
+  "content": "Hello world!"
+}
+```
+- **Response:**
+```json
+{
+  "message": "Message published successfully",
+  "status": 201
+}
+```
+
+### Follow a User
+- **POST** `/user/following`
+- **Body:**
+```json
+{
+  "user_id": "alice",
+  "new_follow": "bob"
+}
+```
+- **Response:**
+```json
+{
+  "message": "New Follower added successfully",
+  "status": 201
+}
+```
 
 ## Example Requests
+
+### Create a User
+```
+curl -X POST http://localhost:8080/user/create -d '{"user_id": "alice"}' -H 'Content-Type: application/json'
+```
+
+### Get User by Username
+```
+curl -X GET http://localhost:8080/user -d '{"user_id": "alice"}' -H 'Content-Type: application/json'
+```
+
 ### Publish a Message
 ```
-curl -X POST http://localhost:8080/publish -d '{"user_id": "alice", "content": "Hello world!"}' -H 'Content-Type: application/json'
+curl -X POST http://localhost:8080/user/publish -d '{"user_id": "alice", "content": "Hello world!"}' -H 'Content-Type: application/json'
 ```
 
 ### Follow a User
 ```
-curl -X POST http://localhost:8080/follow -d '{"user_id": "alice", "new_follow": "bob"}' -H 'Content-Type: application/json'
+curl -X POST http://localhost:8080/user/following -d '{"user_id": "alice", "new_follow": "bob"}' -H 'Content-Type: application/json'
 ```
 
 ### Get User Timeline
 ```
-curl -X GET http://localhost:8080/usertimeline -d '{"user_id": "alice"}' -H 'Content-Type: application/json'
+curl -X GET http://localhost:8080/user/timeline -d '{"user_id": "alice"}' -H 'Content-Type: application/json'
 ```
 
 ## Notes
 - When running locally with the in-memory repository, restart the server to reset the database.
-- See `docs/microblogging-platform.postman_collection.json` for more request examples.
+- See `docs/microblogging-platform-v2.postman_collection.json` for more request examples.
+
+## Visualizar la documentación Swagger/OpenAPI localmente
+
+Puedes levantar Swagger UI fácilmente usando Docker para visualizar la documentación de la API:
+
+```bash
+docker run --rm -p 8081:8080 -v "$(pwd)/docs/openapi.yaml:/openapi.yaml" -e SWAGGER_JSON=/openapi.yaml swaggerapi/swagger-ui
+```
+
+Luego abre tu navegador en [http://localhost:8081](http://localhost:8081) para ver y probar los endpoints.
+
+Asegúrate de tener Docker instalado y que el archivo `docs/openapi.yaml` esté actualizado.
 
 
 

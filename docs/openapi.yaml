@@ -1,0 +1,164 @@
+openapi: 3.0.0
+info:
+  title: Microblogging Platform API
+  version: 1.0.0
+  description: API para una plataforma de microblogging tipo Twitter.
+servers:
+  - url: http://localhost:8080
+paths:
+  /user/create:
+    post:
+      summary: Crear un nuevo usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+              required:
+                - user_id
+      responses:
+        '201':
+          description: Usuario creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: integer
+  /user:
+    get:
+      summary: Obtener usuario por username
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+              required:
+                - user_id
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  following:
+                    type: array
+                    items:
+                      type: string
+                  publications:
+                    type: array
+                    items:
+                      type: string
+  /user/timeline:
+    get:
+      summary: Obtener el timeline de un usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+              required:
+                - user_id
+      responses:
+        '200':
+          description: Timeline obtenido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  feed:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MessageResponse'
+  /user/publish:
+    post:
+      summary: Publicar un mensaje
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                content:
+                  type: string
+              required:
+                - user_id
+                - content
+      responses:
+        '201':
+          description: Mensaje publicado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: integer
+  /user/following:
+    post:
+      summary: Seguir a un usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                new_follow:
+                  type: string
+              required:
+                - user_id
+                - new_follow
+      responses:
+        '201':
+          description: Nuevo seguidor agregado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  status:
+                    type: integer
+components:
+  schemas:
+    MessageResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time 
