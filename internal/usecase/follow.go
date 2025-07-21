@@ -3,30 +3,33 @@ package usecase
 import (
 	"fmt"
 
-	"github.com/nicobellanich/migroblogging-platform/internal/domain"
 	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
 )
 
 type Follow struct {
-	FollowersRepository repository.IFollowersRepository
+	UsersRepository repository.IUsersRepository
 }
 
-func NewFollow(fr repository.IFollowersRepository) *Follow {
+func NewFollow(ur repository.IUsersRepository) *Follow {
 	return &Follow{
-		FollowersRepository: fr,
+		UsersRepository: ur,
 	}
 }
 
 // Execute runs UseCase Follow
 func (uc *Follow) Execute(userID string, newFollow string) error {
 
-	err := uc.FollowersRepository.Save(userID, newFollow)
+	usr, err := uc.UsersRepository.Get(userID)
 	if err != nil {
-		if err == domain.ErrInvalidArgument {
-			return err
-		}
-		return fmt.Errorf("failed to follow user: %w", err)
+		return err
 	}
+
+	usrNewFollow, err := uc.UsersRepository.Get(newFollow)
+	if err != nil {
+		return err
+	}
+
+	usr.AddFollowing(*usrNewFollow)
 
 	fmt.Printf("👤@%s , now is following  👤@%s \n", userID, newFollow)
 

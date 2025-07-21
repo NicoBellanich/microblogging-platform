@@ -19,20 +19,15 @@ func wire() http.Handler {
 	conf := config.Load()
 
 	// Infrastructure: initialize repositories based on environment
-	messageRepository, err := repository.NewMessageRepository(conf)
-	if err != nil {
-		panic(err)
-	}
-
-	followersRepository, err := repository.NewFollowersRepository(conf)
+	usersRepository, err := repository.NewUsersRepository(conf)
 	if err != nil {
 		panic(err)
 	}
 
 	// Use Cases: business logic
-	useCasePublishMessage := usecase.NewPublishMessage(messageRepository)
-	usecaseFollow := usecase.NewFollow(followersRepository)
-	usecaseObtainUserTimeline := usecase.NewObtainUserTimeline(followersRepository, messageRepository)
+	useCasePublishMessage := usecase.NewPublishMessage(usersRepository)
+	usecaseFollow := usecase.NewFollow(usersRepository)
+	usecaseObtainUserTimeline := usecase.NewObtainUserTimeline(usersRepository)
 
 	// Controllers: HTTP handlers
 	messageController := controllers.NewMessageController(useCasePublishMessage)

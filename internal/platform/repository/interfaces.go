@@ -12,3 +12,9 @@ type IFollowersRepository interface {
 	Save(string, string) error
 	LoadFollowersByUser(string) ([]string, error)
 }
+
+type IUsersRepository interface {
+	Create(*domain.User) error
+	Update(string, *domain.User) error
+	Get(string) (*domain.User, error)
+}

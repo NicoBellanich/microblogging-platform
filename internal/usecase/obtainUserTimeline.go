@@ -11,15 +11,13 @@ import (
 
 // ObtainUserTimeline handles the logic for retrieving a user's timeline (feed).
 type ObtainUserTimeline struct {
-	FollowersRepository repository.IFollowersRepository
-	MessageRepository   repository.IMessageRepository
+	UsersRepository repository.IUsersRepository
 }
 
 // NewObtainUserTimeline creates a new ObtainUserTimeline use case with the given repositories.
-func NewObtainUserTimeline(fr repository.IFollowersRepository, mr repository.IMessageRepository) *ObtainUserTimeline {
+func NewObtainUserTimeline(ur repository.IUsersRepository) *ObtainUserTimeline {
 	return &ObtainUserTimeline{
-		FollowersRepository: fr,
-		MessageRepository:   mr,
+		UsersRepository: ur,
 	}
 }
 
@@ -29,36 +27,27 @@ func (uc *ObtainUserTimeline) Execute(userID string) ([]string, error) {
 
 	var timeline []string
 
-	// Load the list of users that userID follows
-	followers, err := uc.FollowersRepository.LoadFollowersByUser(userID)
+	// get user
+	usr, err := uc.UsersRepository.Get(userID)
 	if err != nil {
-		if err == domain.ErrInvalidArgument || err == domain.ErrNoFollowersForUser {
+		return nil, err
+	}
+
+	// build feed
+	var userFeed domain.Feed
+	for _, following := range usr.Following {
+		following, err := uc.UsersRepository.Get(following.Name)
+		if err != nil {
 			return nil, err
 		}
-		return nil, fmt.Errorf("failed to load followers: %w", err)
+
+		userFeed.AddMessageList(&following.Publications)
+
 	}
 
-	// For each followed user, load their messages
-	var messages []domain.Message
-	var messageList domain.MessageList
-	for _, f := range followers {
-		userMessages, err := uc.MessageRepository.LoadAllByUser(f)
-		if err != nil {
-			if err == domain.ErrInvalidArgument || err == domain.ErrNoMessagesForUser {
-				return nil, err
-			}
-			return nil, fmt.Errorf("failed to load messages: %w", err)
-		}
-		messages = append(messages, userMessages...)
-	}
+	userFeed.SortAllMessagesDescending()
 
-	messageList = domain.MessageList(messages)
-
-	// Sort messages by creation time (descending)
-	messageList.SortByCreatedAtDescending()
-
-	// Extract message contents for the timeline
-	timeline = messageList.GetContents()
+	timeline = userFeed.GetMessagesContent()
 
 	// Optionally print the timeline to the console (for debugging/logging)
 	consolePrintTimeline(userID, timeline)

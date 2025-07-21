@@ -11,13 +11,13 @@ import (
 
 // PublishMessage handles the logic for publishing a new message by a user.
 type PublishMessage struct {
-	MessageRepository repository.IMessageRepository
+	UsersRepository repository.IUsersRepository
 }
 
 // NewPublishMessage creates a new PublishMessage use case with the given repository.
-func NewPublishMessage(mr repository.IMessageRepository) *PublishMessage {
+func NewPublishMessage(ur repository.IUsersRepository) *PublishMessage {
 	return &PublishMessage{
-		MessageRepository: mr,
+		UsersRepository: ur,
 	}
 }
 
@@ -34,8 +34,14 @@ func (uc *PublishMessage) Execute(userID string, content string) error {
 		return fmt.Errorf("failed to create message: %w", err)
 	}
 
-	// Save the message using the repository
-	err = uc.MessageRepository.Save(newMessage)
+	usr, err := uc.UsersRepository.Get(userID)
+	if err != nil {
+		return err
+	}
+
+	usr.AddPublication(*newMessage)
+
+	err = uc.UsersRepository.Update(usr.Name, usr)
 	if err != nil {
 		return err
 	}

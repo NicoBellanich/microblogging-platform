@@ -15,13 +15,15 @@ type FollowUseCaseTestSuite struct {
 	suite.Suite
 	ctrl              *gomock.Controller
 	mockFollowersRepo *mocks.MockIFollowersRepository
-	usecase           *usecase.Follow
+	mockUsersRepo     *mocks.MockIUsersRepository
+
+	usecase *usecase.Follow
 }
 
 func (suite *FollowUseCaseTestSuite) SetupTest() {
 	suite.ctrl = gomock.NewController(suite.T())
 	suite.mockFollowersRepo = mocks.NewMockIFollowersRepository(suite.ctrl)
-	suite.usecase = usecase.NewFollow(suite.mockFollowersRepo)
+	suite.usecase = usecase.NewFollow(suite.mockUsersRepo)
 }
 
 func (suite *FollowUseCaseTestSuite) TearDownTest() {

@@ -15,6 +15,7 @@ import (
 type ObtainUserTimelineTestSuite struct {
 	suite.Suite
 	ctrl              *gomock.Controller
+	mockUsersRepo     *mocks.MockIUsersRepository
 	mockFollowersRepo *mocks.MockIFollowersRepository
 	mockMessageRepo   *mocks.MockIMessageRepository
 	usecase           *usecase.ObtainUserTimeline
@@ -24,7 +25,7 @@ func (suite *ObtainUserTimelineTestSuite) SetupTest() {
 	suite.ctrl = gomock.NewController(suite.T())
 	suite.mockFollowersRepo = mocks.NewMockIFollowersRepository(suite.ctrl)
 	suite.mockMessageRepo = mocks.NewMockIMessageRepository(suite.ctrl)
-	suite.usecase = usecase.NewObtainUserTimeline(suite.mockFollowersRepo, suite.mockMessageRepo)
+	suite.usecase = usecase.NewObtainUserTimeline(suite.mockUsersRepo)
 }
 
 func (suite *ObtainUserTimelineTestSuite) TearDownTest() {
