@@ -172,15 +172,15 @@ func (controller *UsersController) GetTimeline(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	messages, err := controller.UsecaseObtainUserTimeline.Execute(req.UserID)
+	feed, err := controller.UsecaseObtainUserTimeline.Execute(req.UserID)
 	if err != nil {
 		http.Error(w, "Failed to obtain user timeline", http.StatusInternalServerError)
 		return
 	}
 
-	feeds := make([]dtos.MessageResponse, 0, len(messages))
-	for _, msg := range messages {
-		feeds = append(feeds, dtos.MessageResponse{
+	messageResponse := make([]dtos.MessageResponse, 0)
+	for _, msg := range feed.GetAllMessages() {
+		messageResponse = append(messageResponse, dtos.MessageResponse{
 			ID:        msg.ID(),
 			UserID:    msg.UserID(),
 			Content:   msg.Content(),
@@ -189,7 +189,7 @@ func (controller *UsersController) GetTimeline(w http.ResponseWriter, r *http.Re
 	}
 
 	resp := dtos.GetUserTimelineResponse{
-		Feeds: feeds,
+		Feed: messageResponse,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

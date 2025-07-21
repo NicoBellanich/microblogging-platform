@@ -8,7 +8,7 @@ type MessageResponse struct {
 }
 
 type GetUserTimelineResponse struct {
-	Feeds []MessageResponse `json:"feeds"`
+	Feed []MessageResponse `json:"feed"`
 }
 
 type GetUserResponse struct {

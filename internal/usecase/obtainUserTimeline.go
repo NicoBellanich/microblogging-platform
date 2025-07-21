@@ -23,7 +23,7 @@ func NewObtainUserTimeline(ur repository.IUsersRepository) *ObtainUserTimeline {
 
 // Execute retrieves the timeline for the given user ID.
 // It loads all users that the given user follows, fetches their messages, sorts them by time, and returns the messages.
-func (uc *ObtainUserTimeline) Execute(userID string) ([]domain.Message, error) {
+func (uc *ObtainUserTimeline) Execute(userID string) (domain.Feed, error) {
 
 	// get user
 	usr, err := uc.UsersRepository.Get(userID)
@@ -39,11 +39,9 @@ func (uc *ObtainUserTimeline) Execute(userID string) ([]domain.Message, error) {
 
 	userFeed.SortAllMessagesDescending()
 
-	messages := userFeed.GetAllMessages()
+	consolePrintTimeline(userID, userFeed.GetAllMessages())
 
-	consolePrintTimeline(userID, messages)
-
-	return messages, nil
+	return userFeed, nil
 }
 
 // consolePrintTimeline prints the timeline to the console for debugging/logging purposes.

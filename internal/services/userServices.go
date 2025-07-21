@@ -37,3 +37,23 @@ func (s *UserServices) GetUser(userName string) (*domain.User, error) {
 
 	return user, nil
 }
+
+func (s *UserServices) UpdateUser(userName string, newUser *domain.User) error {
+
+	user, err := s.GetUser(userName)
+	if err != nil {
+		return err
+	}
+
+	user.Name = newUser.Name
+	user.Following = newUser.Following
+	user.Publications = newUser.Publications
+
+	err = s.UsersRepository.Update(userName, user)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
