@@ -50,8 +50,5 @@ curl -X GET http://localhost:8080/usertimeline -d '{"user_id": "alice"}' -H 'Con
 - When running locally with the in-memory repository, restart the server to reset the database.
 - See `docs/microblogging-platform.postman_collection.json` for more request examples.
 
----
-
-For questions or contributions, open an issue or pull request.
 
 
