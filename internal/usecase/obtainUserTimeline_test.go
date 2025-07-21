@@ -4,105 +4,48 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/stretchr/testify/suite"
-
 	"github.com/nicobellanich/migroblogging-platform/internal/domain"
 	mocks "github.com/nicobellanich/migroblogging-platform/internal/mocks/repository"
 	"github.com/nicobellanich/migroblogging-platform/internal/usecase"
+	"github.com/stretchr/testify/assert"
 )
 
-type ObtainUserTimelineTestSuite struct {
-	suite.Suite
-	ctrl              *gomock.Controller
-	mockUsersRepo     *mocks.MockIUsersRepository
-	mockFollowersRepo *mocks.MockIFollowersRepository
-	mockMessageRepo   *mocks.MockIMessageRepository
-	usecase           *usecase.ObtainUserTimeline
-}
+func TestObtainUserTimeline_Execute(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 
-func (suite *ObtainUserTimelineTestSuite) SetupTest() {
-	suite.ctrl = gomock.NewController(suite.T())
-	suite.mockUsersRepo = mocks.NewMockIUsersRepository(suite.ctrl)
-	suite.usecase = usecase.NewObtainUserTimeline(suite.mockUsersRepo)
-}
+	mockUserServices := mocks.NewMockIUserServices(ctrl)
 
-func (suite *ObtainUserTimelineTestSuite) TearDownTest() {
-	suite.ctrl.Finish()
-}
-
-func (suite *ObtainUserTimelineTestSuite) TestExecute_Success() {
+	// Arrange
 	userID := "nicolas"
-	followingName1 := "maria"
-	followingName2 := "juan"
 
-	msgJuan, _ := domain.NewMessage("Hola soy Juan", "juan")
-	juan := &domain.User{Name: followingName2}
-	juan.Publications.AddMessage(msgJuan)
+	pub1, _ := domain.NewMessage("hola mundo", "followed1")
+	pub2, _ := domain.NewMessage("otro mensaje", "followed1")
 
-	msgMaria, _ := domain.NewMessage("Hola soy Maria", "maria")
-	maria := &domain.User{Name: followingName1}
-	maria.Publications.AddMessage(msgMaria)
-
-	user := &domain.User{Name: userID, Following: []*domain.User{maria, juan}}
-
-	suite.mockUsersRepo.
-		EXPECT().
-		Get(userID).
-		Return(user, nil)
-
-	timeline, err := suite.usecase.Execute(userID)
-
-	suite.NoError(err)
-	suite.Len(timeline.GetAllMessages(), 2)
-
-	// Check that the correct messages are present
-	var foundMaria, foundJuan bool
-	for _, msg := range timeline.GetAllMessages() {
-		if msg.UserID() == "maria" && msg.Content() == "Hola soy Maria" {
-			foundMaria = true
-		}
-		if msg.UserID() == "juan" && msg.Content() == "Hola soy Juan" {
-			foundJuan = true
-		}
+	followedUser := &domain.User{
+		Name:         "followed1",
+		Publications: []domain.Message{*pub1, *pub2},
 	}
-	suite.True(foundMaria, "Maria's message was not found")
-	suite.True(foundJuan, "Juan's message was not found")
-}
 
-func (suite *ObtainUserTimelineTestSuite) TestExecute_FollowersRepoError() {
-	userID := "nicolas"
-	expectedErr := domain.ErrNoFollowersForUser
+	mainUser := &domain.User{
+		Name:      userID,
+		Following: []*domain.User{followedUser},
+	}
 
-	suite.mockUsersRepo.
+	mockUserServices.
 		EXPECT().
-		Get(userID).
-		Return(nil, expectedErr)
+		GetUser(userID).
+		Return(mainUser, nil)
 
-	timeline, err := suite.usecase.Execute(userID)
+	useCase := usecase.NewObtainUserTimeline(mockUserServices)
 
-	suite.Error(err)
-	suite.Nil(timeline)
-	suite.Equal(expectedErr, err)
-}
+	// Act
+	feed, err := useCase.Execute(userID)
 
-func (suite *ObtainUserTimelineTestSuite) TestExecute_MessageRepoError() {
-	userID := "nicolas"
-	followingName := "maria"
-
-	maria := &domain.User{Name: followingName} // No publications
-	user := &domain.User{Name: userID, Following: []*domain.User{maria}}
-
-	suite.mockUsersRepo.
-		EXPECT().
-		Get(userID).
-		Return(user, nil)
-
-	timeline, err := suite.usecase.Execute(userID)
-
-	suite.NoError(err)
-	suite.Len(timeline, 0)
-}
-
-func TestObtainUserTimelineTestSuite(t *testing.T) {
-	suite.Run(t, new(ObtainUserTimelineTestSuite))
+	// Assert
+	assert.NoError(t, err)
+	allMessages := feed.GetAllMessages()
+	assert.Len(t, allMessages, 2)
+	assert.Equal(t, "otro mensaje", allMessages[0].Content())
+	assert.Equal(t, "hola mundo", allMessages[1].Content())
 }

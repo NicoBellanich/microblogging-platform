@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/nicobellanich/migroblogging-platform/internal/domain"
 	"github.com/nicobellanich/migroblogging-platform/internal/platform/repository"
 )
@@ -56,4 +58,56 @@ func (s *UserServices) UpdateUser(userName string, newUser *domain.User) error {
 
 	return nil
 
+}
+
+func (s *UserServices) AddFollowing(userName, newFollowing string) error {
+
+	// get user
+	usr, err := s.UsersRepository.Get(userName)
+	if err != nil {
+		return err
+	}
+
+	// get new following
+	usrNewFollow, err := s.UsersRepository.Get(newFollowing)
+	if err != nil {
+		return err
+	}
+
+	// append new following to user
+	usr.AddFollowing(usrNewFollow)
+
+	// update repository
+	err = s.UsersRepository.Update(usr.Name, usr)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *UserServices) AddPublication(userName, content string) error {
+
+	newMessage, err := domain.NewMessage(content, userName)
+	if err != nil {
+		if err == domain.ErrContentEmpty || err == domain.ErrContentTooLong || err == domain.ErrUserIDEmpty {
+			return err
+		}
+		// handle other errors
+		return fmt.Errorf("failed to create message: %w", err)
+	}
+
+	usr, err := s.UsersRepository.Get(userName)
+	if err != nil {
+		return err
+	}
+
+	usr.AddPublication(*newMessage)
+
+	err = s.UsersRepository.Update(usr.Name, usr)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
