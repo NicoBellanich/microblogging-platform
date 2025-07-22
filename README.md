@@ -166,7 +166,7 @@ curl -X GET http://localhost:8080/user/timeline -d '{"user_id": "alice"}' -H 'Co
 
 ## Notes
 - When running locally with the in-memory repository, restart the server to reset the database.
-- See `docs/microblogging-platform-v2.postman_collection.json` for more request examples.
+- See `docs/microblogging-platform-v4.postman_collection.json` for more request examples.
 
 ## Visualizar la documentación Swagger/OpenAPI localmente
 
