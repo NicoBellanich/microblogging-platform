@@ -9,26 +9,26 @@ import (
 type Message struct {
 	iD        string    `json:"id"`
 	content   string    `json:"content"`
-	userID    string    `json:"user_id"`
+	userName  string    `json:"user_id"`
 	createdAt time.Time `json:"created_at"`
 }
 
 // NewMessage add new message with validations
-func NewMessage(content, userID string) (*Message, error) {
+func NewMessage(content, userName string) (*Message, error) {
 	if len(content) == 0 {
 		return nil, ErrContentEmpty
 	}
 	if len(content) > 280 {
 		return nil, ErrContentTooLong
 	}
-	if len(userID) == 0 {
-		return nil, ErrUserIDEmpty
+	if len(userName) == 0 {
+		return nil, ErrUserNameEmpty
 	}
 
 	return &Message{
 		iD:        uuid.New().String(),
 		content:   content,
-		userID:    userID,
+		userName:  userName,
 		createdAt: time.Now().UTC(),
 	}, nil
 }
@@ -43,9 +43,9 @@ func (m *Message) Content() string {
 	return m.content
 }
 
-// UserID returns Message user ID
-func (m *Message) UserID() string {
-	return m.userID
+// UserName returns Message user name
+func (m *Message) UserName() string {
+	return m.userName
 }
 
 // CreatedAt returns Message created time.Time

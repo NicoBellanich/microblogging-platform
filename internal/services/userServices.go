@@ -90,7 +90,7 @@ func (s *UserServices) AddPublication(userName, content string) error {
 
 	newMessage, err := domain.NewMessage(content, userName)
 	if err != nil {
-		if err == domain.ErrContentEmpty || err == domain.ErrContentTooLong || err == domain.ErrUserIDEmpty {
+		if err == domain.ErrContentEmpty || err == domain.ErrContentTooLong || err == domain.ErrUserNameEmpty {
 			return err
 		}
 		// handle other errors

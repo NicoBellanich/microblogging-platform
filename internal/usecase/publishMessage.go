@@ -21,14 +21,14 @@ func NewPublishMessage(us services.IUserServices) *PublishMessage {
 }
 
 // Execute creates and saves a new message for the given user.
-func (uc *PublishMessage) Execute(userID string, content string) error {
+func (uc *PublishMessage) Execute(userName string, content string) error {
 
-	err := uc.UsersService.AddPublication(userID, content)
+	err := uc.UsersService.AddPublication(userName, content)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("👤@%s , just published - %s \n ", userID, content)
+	fmt.Printf("👤@%s , just published - %s \n ", userName, content)
 
 	return nil
 }

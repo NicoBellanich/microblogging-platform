@@ -17,14 +17,14 @@ func NewFollow(us services.IUserServices) *Follow {
 }
 
 // Execute runs UseCase Follow
-func (usecase *Follow) Execute(userID string, newFollow string) error {
+func (usecase *Follow) Execute(userName string, newFollow string) error {
 
-	err := usecase.UsersService.AddFollowing(userID, newFollow)
+	err := usecase.UsersService.AddFollowing(userName, newFollow)
 	if err != nil {
 		return err
 	}
 
-	fmt.Printf("👤@%s , now is following  👤@%s \n", userID, newFollow)
+	fmt.Printf("👤@%s , now is following  👤@%s \n", userName, newFollow)
 
 	return nil
 }
