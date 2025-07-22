@@ -29,13 +29,20 @@ A simplified Twitter-like microblogging platform built in Go. Users can post mes
 
 You can easily run the application using Docker. Make sure you have Docker installed on your system.
 
+### 0. Init
+- clone this repo
+
 ### 1. Build the image
+
+- in root directory run (this creates a local image of the repo) in next steps I'll be publishing the image in dockerhub
 
 ```bash
 docker build -t microblogging-app .
 ```
 
 ### 2. Run the container
+
+- run
 
 ```bash
 docker run -p 8080:8080 microblogging-app
