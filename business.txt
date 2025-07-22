@@ -1,6 +1,10 @@
-Assumption 1: The .env file should not be public or uploaded to a repository! 
-I decided to leave it here just to show what I think should be included in 
-that file as configuration/environment variables.
+Assumption 0: No utilicé la palabra 'Tweet' en el dominio sino 'Mensaje' ya que es una palabra
+reservada y esto un repositorio publico, anque no tenga ningún fin comercial considero que no
+afecta lo esperado del proyecto.
 
-Assumption 2: TriggerEnv() should be implemented with the organization sistem used
-for loading env variables, like an SDK or a specific client
+Assumption 1: El archivo .env no debe ser público ni subirse a un repositorio.
+Decidí dejarlo aquí solo para mostrar lo que creo que debería incluirse en ese archivo como 
+variables de configuración/entorno/algunos accesos.
+
+Supuesto 2: TriggerEnv() debe implementarse con el sistema de organización utilizado para cargar 
+variables de entorno, como un SDK o un cliente específico.
