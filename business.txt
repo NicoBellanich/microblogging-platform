@@ -3,8 +3,7 @@ reservada y esto un repositorio publico, anque no tenga ningún fin comercial co
 afecta lo esperado del proyecto.
 
 Assumption 1: El archivo .env no debe ser público ni subirse a un repositorio.
-Decidí dejarlo aquí solo para mostrar lo que creo que debería incluirse en ese archivo como 
-variables de configuración/entorno/algunos accesos.
-
-Supuesto 2: TriggerEnv() debe implementarse con el sistema de organización utilizado para cargar 
-variables de entorno, como un SDK o un cliente específico.
+Decidí dejarlo en el repositorio solo para mostrar lo que creo que debería incluirse en ese archivo como 
+variables de configuración/entorno/algunos accesos. Asimismo TriggerEnv() debe implementarse 
+con el sistema de organización utilizado para cargar variables de entorno, como un SDK o 
+un cliente específico.

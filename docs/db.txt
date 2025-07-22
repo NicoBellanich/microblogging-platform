@@ -1,3 +1,10 @@
 Como BD utilizaría una PostgreSQL
 Debido al rendimiento, escalabilidad, modelo de datos.
 Esta solucion requiere un acceso a BD con mucha escalabilidad es por eso que lo utilizaría.
+
+En platform/repository/(prod/test) se podria hacer la implementacion del acceso para
+comunicarse con algun gestor como PostgreeSQL (cuyas credenciales se scarian del .env) y ahi 
+podriamos conectarnos directamente con la BD de 'prod' o 'test'.
+
+Ademas esto tendría una Dockerización por separado para dar escalabilidad e independencia 
+al conteiner de backend con el de almacenamiento.
