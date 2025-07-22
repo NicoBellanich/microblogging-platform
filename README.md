@@ -18,7 +18,7 @@ A simplified Twitter-like microblogging platform built in Go. Users can post mes
 - **internal/platform/repository/**: Repository interfaces and implementations (in-memory, prod, test)
 - **config/**: Environment and configuration management
 
-## Setup with terminal
+## Local Setup
 1. Clone this repo
 2. Run `go mod tidy`
 3. Run `go test ./...` to verify everything is OK
