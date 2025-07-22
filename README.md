@@ -29,17 +29,13 @@ A simplified Twitter-like microblogging platform built in Go. Users can post mes
 
 You can easily run the application using Docker. Make sure you have Docker installed on your system.
 
-### 1. Build the image
-
-run this to download current dockerhub image
+### 1. Download dockerhub image
 
 ```bash
 docker pull nicolasbellanich/microblogging-platform-final:v1
 ```
 
 ### 2. Run the container
-
-- run
 
 ```bash
 docker run -p 8080:8080 nicolasbellanich/microblogging-platform-final:v1
