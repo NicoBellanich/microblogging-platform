@@ -34,34 +34,34 @@ func (ur *UsersRepository) Create(user *domain.User) error {
 	return nil
 }
 
-func (ur *UsersRepository) Update(userID string, user *domain.User) error {
+func (ur *UsersRepository) Update(userName string, user *domain.User) error {
 	if user == nil {
 		return domain.ErrNilUserProvided
 	}
-	if userID == "" {
-		return domain.ErrUserIDEmpty
+	if userName == "" {
+		return domain.ErrUserNameEmpty
 	}
 
 	ur.mutex.Lock()
 	defer ur.mutex.Unlock()
 
-	if _, exists := ur.users[userID]; !exists {
+	if _, exists := ur.users[userName]; !exists {
 		return domain.ErrUserNotFound
 	}
 
-	ur.users[userID] = user
+	ur.users[userName] = user
 	return nil
 }
 
-func (ur *UsersRepository) Get(userID string) (*domain.User, error) {
-	if userID == "" {
-		return nil, domain.ErrUserIDEmpty
+func (ur *UsersRepository) Get(userName string) (*domain.User, error) {
+	if userName == "" {
+		return nil, domain.ErrUserNameEmpty
 	}
 
 	ur.mutex.Lock()
 	defer ur.mutex.Unlock()
 
-	user, exists := ur.users[userID]
+	user, exists := ur.users[userName]
 	if !exists {
 		return nil, domain.ErrUserNotFound
 	}

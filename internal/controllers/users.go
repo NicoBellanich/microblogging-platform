@@ -42,12 +42,12 @@ func (controller *UsersController) Create(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	if req.UserID == "" {
+	if req.UserName == "" {
 		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
 		return
 	}
 
-	if err := controller.UserService.AddUser(req.UserID); err != nil {
+	if err := controller.UserService.AddUser(req.UserName); err != nil {
 		writeJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -70,12 +70,12 @@ func (controller *UsersController) GetUserByUsername(w http.ResponseWriter, r *h
 		return
 	}
 
-	if req.UserID == "" {
+	if req.UserName == "" {
 		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
 		return
 	}
 
-	user, err := controller.UserService.GetUser(req.UserID)
+	user, err := controller.UserService.GetUser(req.UserName)
 	if err != nil {
 		writeJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -105,7 +105,7 @@ func (controller *UsersController) AddPublication(w http.ResponseWriter, r *http
 		return
 	}
 
-	if req.UserID == "" {
+	if req.UserName == "" {
 		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
 		return
 	}
@@ -115,7 +115,7 @@ func (controller *UsersController) AddPublication(w http.ResponseWriter, r *http
 		return
 	}
 
-	if err := controller.UsecasePublishMessage.Execute(req.UserID, req.Content); err != nil {
+	if err := controller.UsecasePublishMessage.Execute(req.UserName, req.Content); err != nil {
 		writeJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -137,7 +137,7 @@ func (controller *UsersController) AddFollowing(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	if req.UserID == "" {
+	if req.UserName == "" {
 		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
 		return
 	}
@@ -147,7 +147,7 @@ func (controller *UsersController) AddFollowing(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	if err := controller.UsecaseFollow.Execute(req.UserID, req.NewFollow); err != nil {
+	if err := controller.UsecaseFollow.Execute(req.UserName, req.NewFollow); err != nil {
 		writeJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -169,7 +169,7 @@ func (controller *UsersController) GetTimeline(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	feed, err := controller.UsecaseObtainUserTimeline.Execute(req.UserID)
+	feed, err := controller.UsecaseObtainUserTimeline.Execute(req.UserName)
 	if err != nil {
 		writeJSONError(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -179,7 +179,7 @@ func (controller *UsersController) GetTimeline(w http.ResponseWriter, r *http.Re
 	for _, msg := range feed.GetAllMessages() {
 		messageResponse = append(messageResponse, dtos.MessageResponse{
 			ID:        msg.ID(),
-			UserID:    msg.UserID(),
+			UserName:  msg.UserName(),
 			Content:   msg.Content(),
 			CreatedAt: msg.CreatedAt().Format("2006-01-02T15:04:05Z07:00"),
 		})

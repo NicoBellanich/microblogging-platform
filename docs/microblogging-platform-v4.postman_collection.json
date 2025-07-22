@@ -633,7 +633,7 @@
 					"response": []
 				},
 				{
-					"name": "New Follow Error - user id",
+					"name": "New Follow Error - user name",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -660,7 +660,7 @@
 					"response": []
 				},
 				{
-					"name": "New Follow Error - user id new follow void",
+					"name": "New Follow Error - user name new follow void",
 					"request": {
 						"method": "POST",
 						"header": [],

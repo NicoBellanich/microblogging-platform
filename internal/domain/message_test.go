@@ -14,14 +14,14 @@ func (s *MessageTestSuite) SetupTest() {}
 
 func (s *MessageTestSuite) TestNewMessageValidInput() {
 	content := "Hello world"
-	userID := "user123"
-	msg, err := NewMessage(content, userID)
+	userName := "user123"
+	msg, err := NewMessage(content, userName)
 
 	s.NoError(err)
 	s.NotNil(msg)
 
 	s.Equal(content, msg.Content())
-	s.Equal(userID, msg.UserID())
+	s.Equal(userName, msg.UserName())
 	s.NotEmpty(msg.CreatedAt())
 }
 
@@ -42,12 +42,12 @@ func (s *MessageTestSuite) TestNewMessageContentExceedsLimit() {
 	s.Equal(ErrContentTooLong, err)
 }
 
-func (s *MessageTestSuite) TestNewMessageEmptyUserID() {
+func (s *MessageTestSuite) TestNewMessageEmptyUserName() {
 	msg, err := NewMessage("Hola, mundo!", "")
 
 	s.Error(err)
 	s.Nil(msg)
-	s.Equal(ErrUserIDEmpty, err)
+	s.Equal(ErrUserNameEmpty, err)
 }
 
 func TestMessageSuite(t *testing.T) {

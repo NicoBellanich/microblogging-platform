@@ -17,7 +17,7 @@ func TestObtainUserTimeline_Execute(t *testing.T) {
 	mockUserServices := mocks.NewMockIUserServices(ctrl)
 
 	// Arrange
-	userID := "nicolas"
+	userName := "nicolas"
 
 	pub1, _ := domain.NewMessage("hola mundo", "followed1")
 	pub2, _ := domain.NewMessage("otro mensaje", "followed1")
@@ -28,19 +28,19 @@ func TestObtainUserTimeline_Execute(t *testing.T) {
 	}
 
 	mainUser := &domain.User{
-		Name:      userID,
+		Name:      userName,
 		Following: []*domain.User{followedUser},
 	}
 
 	mockUserServices.
 		EXPECT().
-		GetUser(userID).
+		GetUser(userName).
 		Return(mainUser, nil)
 
 	useCase := usecase.NewObtainUserTimeline(mockUserServices)
 
 	// Act
-	feed, err := useCase.Execute(userID)
+	feed, err := useCase.Execute(userName)
 
 	// Assert
 	assert.NoError(t, err)

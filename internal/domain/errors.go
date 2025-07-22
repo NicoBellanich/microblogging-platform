@@ -5,7 +5,7 @@ import "errors"
 var (
 	ErrContentEmpty       = errors.New("content cannot be empty")
 	ErrContentTooLong     = errors.New("content exceeds 280 characters")
-	ErrUserIDEmpty        = errors.New("userID cannot be empty")
+	ErrUserNameEmpty      = errors.New("userName cannot be empty")
 	ErrInvalidArgument    = errors.New("invalid argument")
 	ErrNoMessagesForUser  = errors.New("user doesn't have any post yet")
 	ErrNoFollowersForUser = errors.New("user doesn't have any followers yet")
