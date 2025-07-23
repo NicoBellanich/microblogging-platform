@@ -23,19 +23,22 @@ func NewObtainUserTimeline(us services.IUserServices) *ObtainUserTimeline {
 
 // Execute retrieves the timeline for the given user name.
 // It loads all users that the given user follows, fetches their messages, sorts them by time, and returns the messages.
-func (usecase *ObtainUserTimeline) Execute(userName string) (domain.Feed, error) {
+func (usecase *ObtainUserTimeline) Execute(userName string) (domain.MessageList, error) {
 
 	user, err := usecase.UserServices.GetUser(userName)
 	if err != nil {
 		return nil, err
 	}
 
-	var userFeed domain.Feed
+	var userFeed domain.MessageList
 	for _, following := range user.Following {
-		userFeed.AddMessageList(&following.Publications)
+		msg := following.Publications.GetAllMessages()
+		for _, message := range msg {
+			userFeed.AddMessage(&message)
+		}
 	}
 
-	userFeed.SortAllMessagesDescending()
+	userFeed.SortByCreatedAtDescending()
 
 	consolePrintTimeline(userName, userFeed.GetAllMessages())
 
@@ -46,7 +49,7 @@ func (usecase *ObtainUserTimeline) Execute(userName string) (domain.Feed, error)
 func consolePrintTimeline(user string, messages []domain.Message) {
 	fmt.Printf("👤@%s feed ========= \n", user)
 	for _, m := range messages {
-		fmt.Printf("💬 %s - by %s \n", m.Content(), m.UserName())
+		fmt.Printf("💬 %s - by %s \n", m.Content, m.Username)
 	}
 
 	fmt.Println(" ==================================== \n ")

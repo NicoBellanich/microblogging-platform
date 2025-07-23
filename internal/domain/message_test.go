@@ -20,9 +20,9 @@ func (s *MessageTestSuite) TestNewMessageValidInput() {
 	s.NoError(err)
 	s.NotNil(msg)
 
-	s.Equal(content, msg.Content())
-	s.Equal(userName, msg.UserName())
-	s.NotEmpty(msg.CreatedAt())
+	s.Equal(content, msg.Content)
+	s.Equal(userName, msg.Username)
+	s.NotEmpty(msg.CreatedAt)
 }
 
 func (s *MessageTestSuite) TestNewMessageEmptyContent() {

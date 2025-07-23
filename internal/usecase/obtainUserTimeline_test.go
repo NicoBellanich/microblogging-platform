@@ -46,6 +46,6 @@ func TestObtainUserTimeline_Execute(t *testing.T) {
 	assert.NoError(t, err)
 	allMessages := feed.GetAllMessages()
 	assert.Len(t, allMessages, 2)
-	assert.Equal(t, "otro mensaje", allMessages[0].Content())
-	assert.Equal(t, "hola mundo", allMessages[1].Content())
+	assert.Equal(t, "otro mensaje", allMessages[0].Content)
+	assert.Equal(t, "hola mundo", allMessages[1].Content)
 }

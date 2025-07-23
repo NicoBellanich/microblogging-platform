@@ -1,5 +1,7 @@
 package dtos
 
+import "github.com/nicobellanich/migroblogging-platform/internal/domain"
+
 type MessageResponse struct {
 	ID        string `json:"id"`
 	UserName  string `json:"user_id"`
@@ -12,7 +14,7 @@ type GetUserTimelineResponse struct {
 }
 
 type GetUserResponse struct {
-	Name         string   `json:"username"`
-	Following    []string `json:"following"`
-	Publications []string `json:"publications"`
+	Name         string             `json:"username"`
+	Following    []*domain.User     `json:"following"`
+	Publications domain.MessageList `json:"publications"` // aca deberia devolver []MessageResponse tambien
 }

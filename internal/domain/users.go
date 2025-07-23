@@ -22,16 +22,10 @@ func (user *User) AddFollowing(newFollowing *User) {
 	}
 }
 
-func (user *User) GetAllPublications() MessageList {
+func (user *User) GetPublications() MessageList {
 	return user.Publications
 }
 
-func (user *User) GetAllFollowingUsers() []string {
-	var usersList []string
-
-	for _, f := range user.Following {
-		usersList = append(usersList, f.Name)
-	}
-
-	return usersList
+func (user *User) GetFollowing() []*User {
+	return user.Following
 }

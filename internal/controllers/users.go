@@ -83,8 +83,8 @@ func (controller *UsersController) GetUserByUsername(w http.ResponseWriter, r *h
 
 	resp := dtos.GetUserResponse{
 		Name:         user.Name,
-		Following:    user.GetAllFollowingUsers(),
-		Publications: user.Publications.GetContents(),
+		Following:    user.GetFollowing(),
+		Publications: user.GetPublications(),
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -178,10 +178,10 @@ func (controller *UsersController) GetTimeline(w http.ResponseWriter, r *http.Re
 	messageResponse := make([]dtos.MessageResponse, 0)
 	for _, msg := range feed.GetAllMessages() {
 		messageResponse = append(messageResponse, dtos.MessageResponse{
-			ID:        msg.ID(),
-			UserName:  msg.UserName(),
-			Content:   msg.Content(),
-			CreatedAt: msg.CreatedAt().Format("2006-01-02T15:04:05Z07:00"),
+			ID:        msg.ID,
+			UserName:  msg.Username,
+			Content:   msg.Content,
+			CreatedAt: msg.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
 		})
 	}
 
