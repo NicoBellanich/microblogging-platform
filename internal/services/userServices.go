@@ -68,6 +68,12 @@ func (s *UserServices) AddFollowing(userName, newFollowing string) error {
 		return err
 	}
 
+	for _, userFollowing := range usr.Following {
+		if newFollowing == userFollowing.Name {
+			return domain.ErrUserAlreadyFollowing
+		}
+	}
+
 	// get new following
 	usrNewFollow, err := s.UsersRepository.Get(newFollowing)
 	if err != nil {
