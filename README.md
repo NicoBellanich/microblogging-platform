@@ -32,13 +32,13 @@ You can easily run the application using Docker. Make sure you have Docker insta
 ### 1. Download dockerhub image
 
 ```bash
-docker pull nicolasbellanich/microblogging-platform-final:v1
+docker pull nicolasbellanich/microblogging-platform-final:latest
 ```
 
 ### 2. Run the container
 
 ```bash
-docker run -p 8080:8080 nicolasbellanich/microblogging-platform-final:v1
+docker run -p 8080:8080 nicolasbellanich/microblogging-platform-final:latest
 ```
 
 This will start the API at [http://localhost:8080](http://localhost:8080).
