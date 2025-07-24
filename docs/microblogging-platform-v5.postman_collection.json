@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "864fab0e-7b4a-49df-93df-6d9d79a2257c",
-		"name": "microblogging-platform-v2",
+		"_postman_id": "5f0a93b8-42a6-41ad-a219-5f99a07c38c7",
+		"name": "microblogging-platform-v5",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "10984451"
 	},
@@ -156,7 +156,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"userB\",\n    \"content\": \"I'd love to be followed by someone\"\n}",
+							"raw": "{\n    \"user_id\": \"userB\",\n    \"content\": \"I'd love to be followed by someone aaa\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -552,31 +552,262 @@
 			"name": "Errors",
 			"item": [
 				{
-					"name": "Publish Error Long Content",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"nicolas\",\n    \"content\": \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+					"name": "Cannot follow twice - run:",
+					"item": [
+						{
+							"name": "Create user A",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": \"testErrorTwoFollows\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/user/create",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"user",
+										"create"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "{{baseURL}}/user/publish",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								"publish"
-							]
+						{
+							"name": "Create user B",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": \"testErrorTwoFollows_usr2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/user/create",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"user",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "First Run",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": \"testErrorTwoFollows\",\n    \"new_follow\": \"testErrorTwoFollows_usr2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/user/following",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"user",
+										"following"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Second Run - Expected Error",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": \"testErrorTwoFollows\",\n    \"new_follow\": \"testErrorTwoFollows_usr2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/user/following",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"user",
+										"following"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
+				},
+				{
+					"name": "Publish Long content - run",
+					"item": [
+						{
+							"name": "Create user A",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": \"usrLongContentError\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/user/create",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"user",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Publis long content - Expected error",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": \"usrLongContentError\",\n    \"content\": \"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/user/publish",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"user",
+										"publish"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "New Follow Errors",
+					"item": [
+						{
+							"name": "New Follow Error - user id",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": \"\",\n    \"new_follow\": \"martin\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/user/following",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"user",
+										"following"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Follow Error - user id new follow void",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": \"nicolas\",\n    \"new_follow\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/user/following",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"user",
+										"following"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Follow Error - user does not exist",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": \"aaaaaaaaasdasadsasddsadsa\",\n    \"new_follow\": \"nicolas\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/user/following",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"user",
+										"following"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "Create User Void",
@@ -627,87 +858,6 @@
 							"path": [
 								"user",
 								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "New Follow Error - user name",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"\",\n    \"new_follow\": \"martin\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/user/following",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								"following"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "New Follow Error - user name new follow void",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"nicolas\",\n    \"new_follow\": \"\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/user/following",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								"following"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "New Follow Error - user does not exist",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"aaaaaaaaasdasadsasddsadsa\",\n    \"new_follow\": \"nicolas\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/user/following",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"user",
-								"following"
 							]
 						}
 					},

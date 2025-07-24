@@ -28,26 +28,32 @@ func (s *MessageTestSuite) TestNewMessageValidInput() {
 func (s *MessageTestSuite) TestNewMessageEmptyContent() {
 	msg, err := NewMessage("", "user123")
 
+	emptyContentError := NewAppError("[DOMAIN]", ErrContentEmpty, "")
+
 	s.Error(err)
 	s.Nil(msg)
-	s.Equal(ErrContentEmpty, err)
+	s.Equal(emptyContentError, err)
 }
 
 func (s *MessageTestSuite) TestNewMessageContentExceedsLimit() {
 	longContent := string(make([]byte, 281))
 	msg, err := NewMessage(longContent, "user123")
 
+	tooLongErr := NewAppError("[DOMAIN]", ErrContentTooLong, "")
+
 	s.Error(err)
 	s.Nil(msg)
-	s.Equal(ErrContentTooLong, err)
+	s.Equal(tooLongErr, err)
 }
 
 func (s *MessageTestSuite) TestNewMessageEmptyUserName() {
 	msg, err := NewMessage("Hola, mundo!", "")
 
+	emptyUsernameErr := NewAppError("[DOMAIN]", ErrUserNameEmpty, "")
+
 	s.Error(err)
 	s.Nil(msg)
-	s.Equal(ErrUserNameEmpty, err)
+	s.Equal(emptyUsernameErr, err)
 }
 
 func TestMessageSuite(t *testing.T) {

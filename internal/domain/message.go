@@ -16,13 +16,13 @@ type Message struct {
 // NewMessage add new message with validations
 func NewMessage(content, userName string) (*Message, error) {
 	if len(content) == 0 {
-		return nil, ErrContentEmpty
+		return nil, NewAppError("[DOMAIN]", ErrContentEmpty, "")
 	}
 	if len(content) > 280 {
-		return nil, ErrContentTooLong
+		return nil, NewAppError("[DOMAIN]", ErrContentTooLong, "")
 	}
 	if len(userName) == 0 {
-		return nil, ErrUserNameEmpty
+		return nil, NewAppError("[DOMAIN]", ErrUserNameEmpty, "")
 	}
 
 	return &Message{
