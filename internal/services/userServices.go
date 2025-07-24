@@ -70,7 +70,10 @@ func (s *UserServices) AddFollowing(userName, newFollowing string) error {
 
 	for _, userFollowing := range usr.Following {
 		if newFollowing == userFollowing.Name {
-			return domain.ErrUserAlreadyFollowing
+			return domain.NewAppError(
+				"[SERVICE]",
+				domain.ErrUserAlreadyFollowing,
+				fmt.Sprintf("user=%s already follows user=%s", userName, newFollowing))
 		}
 	}
 
@@ -96,11 +99,7 @@ func (s *UserServices) AddPublication(userName, content string) error {
 
 	newMessage, err := domain.NewMessage(content, userName)
 	if err != nil {
-		if err == domain.ErrContentEmpty || err == domain.ErrContentTooLong || err == domain.ErrUserNameEmpty {
-			return err
-		}
-		// handle other errors
-		return fmt.Errorf("failed to create message: %w", err)
+		return err
 	}
 
 	usr, err := s.UsersRepository.Get(userName)

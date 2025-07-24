@@ -15,7 +15,7 @@ func (ml *MessageList) SortByCreatedAtDescending() {
 func (ml *MessageList) GetContents() []string {
 	contents := make([]string, len(*ml))
 	for i, msg := range *ml {
-		contents[i] = msg.Content() + "- said @" + msg.UserName()
+		contents[i] = msg.Content()
 	}
 	return contents
 }
