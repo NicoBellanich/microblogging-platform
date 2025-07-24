@@ -41,6 +41,7 @@ type AppError struct {
 	Message  string // API message
 	Op       string // context
 	Resource string // missing resource (ej. "username=nico")
+	Err      error
 }
 
 func NewAppError(op string, baseErr error, resource string) *AppError {
@@ -53,9 +54,16 @@ func NewAppError(op string, baseErr error, resource string) *AppError {
 		Message:  baseErr.Error(),
 		Op:       op,
 		Resource: resource,
+		Err:      baseErr,
 	}
 }
 
+// Error, implements error interface
 func (e *AppError) Error() string {
 	return fmt.Sprintf("%s: %s (%s)", e.Op, e.Message, e.Resource)
+}
+
+// Unwrap key to compare errors with some errors libraries
+func (e *AppError) Unwrap() error {
+	return e.Err
 }
