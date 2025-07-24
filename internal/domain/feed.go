@@ -40,15 +40,6 @@ func (f *Feed) SortAllMessagesDescending() {
 	}
 }
 
-// GetMessages returns all messages from the Feed as a single slice
-func (f *Feed) GetMessagesContent() []string {
-	var allMessages []string
-	for _, ml := range *f {
-		allMessages = append(allMessages, ml.GetContents()...)
-	}
-	return allMessages
-}
-
 // GetAllMessages returns all messages from the Feed as a single slice of Message
 func (f *Feed) GetAllMessages() []Message {
 	var allMessages []Message

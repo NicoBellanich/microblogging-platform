@@ -136,4 +136,5 @@ func TestAddPublication_InvalidMessage(t *testing.T) {
 	err := service.AddPublication("nico", "")
 
 	assert.ErrorIs(t, err, domain.ErrContentEmpty)
+
 }

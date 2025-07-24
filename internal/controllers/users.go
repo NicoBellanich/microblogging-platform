@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	dtos "github.com/nicobellanich/migroblogging-platform/internal/controllers/DTOs"
+	"github.com/nicobellanich/migroblogging-platform/internal/domain"
 	"github.com/nicobellanich/migroblogging-platform/internal/services"
 	"github.com/nicobellanich/migroblogging-platform/internal/usecase"
 )
@@ -32,23 +33,23 @@ func NewUsersController(
 
 func (controller *UsersController) Create(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		writeJSONError(w, "Method not allowed", http.StatusMethodNotAllowed)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrMethodNotAllowed, "method="+r.Method))
 		return
 	}
 
 	var req dtos.CreateUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeJSONError(w, "Invalid request body", http.StatusBadRequest)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrInvalidRequestBody, ""))
 		return
 	}
 
 	if req.UserName == "" {
-		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrInvalidRequestBody, "user_id"))
 		return
 	}
 
 	if err := controller.UserService.AddUser(req.UserName); err != nil {
-		writeJSONError(w, err.Error(), http.StatusInternalServerError)
+		writeJSONError(w, err)
 		return
 	}
 
@@ -60,24 +61,24 @@ func (controller *UsersController) Create(w http.ResponseWriter, r *http.Request
 
 func (controller *UsersController) GetUserByUsername(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		writeJSONError(w, "Method not allowed", http.StatusMethodNotAllowed)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrMethodNotAllowed, "method="+r.Method))
 		return
 	}
 
 	var req dtos.GetUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeJSONError(w, "Invalid request body", http.StatusBadRequest)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrInvalidRequestBody, ""))
 		return
 	}
 
 	if req.UserName == "" {
-		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrInvalidRequestBody, "user_id"))
 		return
 	}
 
 	user, err := controller.UserService.GetUser(req.UserName)
 	if err != nil {
-		writeJSONError(w, err.Error(), http.StatusInternalServerError)
+		writeJSONError(w, err)
 		return
 	}
 
@@ -95,28 +96,28 @@ func (controller *UsersController) GetUserByUsername(w http.ResponseWriter, r *h
 
 func (controller *UsersController) AddPublication(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		writeJSONError(w, "Method not allowed", http.StatusMethodNotAllowed)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrMethodNotAllowed, "method="+r.Method))
 		return
 	}
 
 	var req dtos.CreatePublicationRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeJSONError(w, "Invalid request body", http.StatusBadRequest)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrInvalidRequestBody, ""))
 		return
 	}
 
 	if req.UserName == "" {
-		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrInvalidRequestBody, "user_id"))
 		return
 	}
 
 	if req.Content == "" {
-		writeJSONError(w, "Invalid request body (content)", http.StatusBadRequest)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrInvalidRequestBody, "content"))
 		return
 	}
 
 	if err := controller.UsecasePublishMessage.Execute(req.UserName, req.Content); err != nil {
-		writeJSONError(w, err.Error(), http.StatusInternalServerError)
+		writeJSONError(w, err)
 		return
 	}
 
@@ -127,28 +128,28 @@ func (controller *UsersController) AddPublication(w http.ResponseWriter, r *http
 
 func (controller *UsersController) AddFollowing(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		writeJSONError(w, "Method not allowed", http.StatusMethodNotAllowed)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrMethodNotAllowed, "method="+r.Method))
 		return
 	}
 
 	var req dtos.FollowRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeJSONError(w, "Invalid request body", http.StatusBadRequest)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrInvalidRequestBody, ""))
 		return
 	}
 
 	if req.UserName == "" {
-		writeJSONError(w, "Invalid request body (user_id)", http.StatusBadRequest)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrInvalidRequestBody, "user_id"))
 		return
 	}
 
 	if req.NewFollow == "" {
-		writeJSONError(w, "Invalid request body (new_follow)", http.StatusBadRequest)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrInvalidRequestBody, "new_follow"))
 		return
 	}
 
 	if err := controller.UsecaseFollow.Execute(req.UserName, req.NewFollow); err != nil {
-		writeJSONError(w, err.Error(), http.StatusInternalServerError)
+		writeJSONError(w, err)
 		return
 	}
 
@@ -159,19 +160,19 @@ func (controller *UsersController) AddFollowing(w http.ResponseWriter, r *http.R
 
 func (controller *UsersController) GetTimeline(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		writeJSONError(w, "Method not allowed", http.StatusMethodNotAllowed)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrMethodNotAllowed, "method="+r.Method))
 		return
 	}
 
 	var req dtos.GetUserTimelineRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeJSONError(w, "Invalid request body", http.StatusBadRequest)
+		writeJSONError(w, domain.NewAppError("[CONTROLLER]", domain.ErrInvalidRequestBody, ""))
 		return
 	}
 
 	feed, err := controller.UsecaseObtainUserTimeline.Execute(req.UserName)
 	if err != nil {
-		writeJSONError(w, err.Error(), http.StatusInternalServerError)
+		writeJSONError(w, err)
 		return
 	}
 
@@ -194,12 +195,23 @@ func (controller *UsersController) GetTimeline(w http.ResponseWriter, r *http.Re
 	json.NewEncoder(w).Encode(resp)
 }
 
-// writeJSONError writes a JSON error response with the given message and status code
-func writeJSONError(w http.ResponseWriter, message string, status int) {
+func writeJSONError(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
+
+	if appErr, ok := err.(*domain.AppError); ok {
+		w.WriteHeader(appErr.Code)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"error":    appErr.Message,
+			"status":   appErr.Code,
+			"resource": appErr.Resource,
+			"op":       appErr.Op,
+		})
+		return
+	}
+
+	w.WriteHeader(http.StatusInternalServerError)
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"error":  message,
-		"status": status,
+		"error":  "internal server error",
+		"status": http.StatusInternalServerError,
 	})
 }

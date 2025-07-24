@@ -20,14 +20,22 @@ func NewUsersRepository() repository.IUsersRepository {
 
 func (ur *UsersRepository) Create(user *domain.User) error {
 	if user == nil {
-		return domain.ErrNilUserProvided
+		return domain.NewAppError(
+			"[REPOSITORY]",
+			domain.ErrNilUserProvided,
+			"",
+		)
 	}
 
 	ur.mutex.Lock()
 	defer ur.mutex.Unlock()
 
 	if _, exists := ur.users[user.Name]; exists {
-		return domain.ErrUserAlreadyExists
+		return domain.NewAppError(
+			"[REPOSITORY]",
+			domain.ErrUserAlreadyExists,
+			"username="+user.Name,
+		)
 	}
 
 	ur.users[user.Name] = user
@@ -36,17 +44,17 @@ func (ur *UsersRepository) Create(user *domain.User) error {
 
 func (ur *UsersRepository) Update(userName string, user *domain.User) error {
 	if user == nil {
-		return domain.ErrNilUserProvided
+		return domain.NewAppError("REPOSITORY", domain.ErrNilUserProvided, "")
 	}
 	if userName == "" {
-		return domain.ErrUserNameEmpty
+		return domain.NewAppError("REPOSITORY", domain.ErrUserNameEmpty, "")
 	}
 
 	ur.mutex.Lock()
 	defer ur.mutex.Unlock()
 
 	if _, exists := ur.users[userName]; !exists {
-		return domain.ErrUserNotFound
+		return domain.NewAppError("REPOSITORY", domain.ErrUserNotFound, "user="+userName)
 	}
 
 	ur.users[userName] = user
@@ -55,7 +63,7 @@ func (ur *UsersRepository) Update(userName string, user *domain.User) error {
 
 func (ur *UsersRepository) Get(userName string) (*domain.User, error) {
 	if userName == "" {
-		return nil, domain.ErrUserNameEmpty
+		return nil, domain.NewAppError("[REPOSITORY]", domain.ErrUserNameEmpty, "")
 	}
 
 	ur.mutex.Lock()
@@ -63,7 +71,7 @@ func (ur *UsersRepository) Get(userName string) (*domain.User, error) {
 
 	user, exists := ur.users[userName]
 	if !exists {
-		return nil, domain.ErrUserNotFound
+		return nil, domain.NewAppError("[REPOSITORY]", domain.ErrUserNotFound, "username="+userName)
 	}
 
 	return user, nil
